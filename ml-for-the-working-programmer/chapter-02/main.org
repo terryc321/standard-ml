@@ -1,7 +1,7 @@
 
 Chapter 2 Names Functions and Types
 
-#+begin_src sml :tangle "code/value.sml"  :exports both :noweb yes :results value code :output replace :session *sml*
+#+begin_src sml :tangle "code/value.sml"  :session *sml*
 
   1 + 2 ;
   3.2 - 1.2;
@@ -9,9 +9,13 @@ Chapter 2 Names Functions and Types
 
 #+end_src
 
+#+RESULTS:
+: val it = 2 : real
+
 Value declarations
 
-#+begin_src sml :tangle "code/value.sml"  :exports both :noweb yes :results none :output replace :session *sml*
+# #+begin_src sml :tangle "code/value.sml"  :exports both :noweb yes :results none :output replace :session *sml*
+#+begin_src sml :tangle "code/value.sml" :session *sml*
 
   val seconds = 60;
   val minutes = 60;
@@ -21,8 +25,11 @@ Value declarations
   val pi = 3.14159265;
   val r = 2.0;
   val area = pi * r * r;
-  
+
 #+end_src
+
+#+RESULTS:
+: val minutes = 60 : int
 
 Redundant it
 
@@ -31,8 +38,10 @@ in the repl , cannot use it in code because it is not defined there.
 
 2.2 Declaring functions
 
-#+begin_src sml :tangle "code/value.sml"  :exports both :noweb yes :results none :output replace :session *sml*
+# #+begin_src sml :tangle "code/value.sml"  :exports both :noweb yes :results none :output replace :session *sml*
 
+#+begin_src :tangle "code/value.sml"
+  
   (* calculate the area of a circle *)
   val area = fn r => pi * r * r;
   area( 2.0 );
@@ -41,48 +50,157 @@ in the repl , cannot use it in code because it is not defined there.
   val pi = 0.0 ;
   area 3.0 ;
   (* area continues to work - see static binding *)
-  
+
 #+end_src
 
 2.3 Identifiers in standard ml
 
-abstype and andalso as case datatype do
-else end eqtype exception fn fun functor
-handle if in include infix infixr let local
-nonfix of op open orelse raise rec
-sharing sig signature struct structure
-then type val where while with withtype
+An alphabetic name must begin with a letter, which may be followed
+by any number of letters, digits, underscores (_), or primes (’), usually called
+single quotes. For instance:
+
+#+begin_src
+x UB40 Hamlet_Prince_of_Denmark h’’3_H
+#+end_src
+
+The case of letters matters, so q differs from Q. Prime characters are allowed
+because ML was designed by mathematicians, who like variables called x , x' , x'' .
+
+When choosing names, be certain to avoid ML’s keywords:
+
+#+begin_src
+abstype and andalso as case datatype do else end eqtype exception fn fun functor handle
+if in include infix infixr let local nonfix of op open orelse raise rec sharing sig
+signature struct structure then type val where while with withtype
 
 Watch especially for the short ones: as, fn, if, in, of, op.
+
+#+end_src
 
 Perhaps emacs can warn us about this by highlighting words differently.
 
 Symbolic names
 
+#+begin_src
 ! % & $ # + - * / : < = > ? @ \ ˜ ‘ ˆ |
+#+end_src
 
-Reserved special characters - these cannot form part of symbol name 
+Reserved special characters - these cannot form part of symbol name
 
+#+begin_src 
 : | = => -> # :>
+#+end_src
 
 Addendum : the vertical bar appears in both symbolic name and reserved special characters
+
+Numbers, character strings and truth values
+The simplest ML values are integer and real numbers, strings and characters, and the booleans or truth values. This section introduces these types with
+their constants and principal operations.
+
+2.4 Arithmetic
+
+ML distinguishes between integers (type int) and real numbers (type real). Integer arithmetic is exact (with unlimited precision in some ML systems)
+while real arithmetic is only as accurate as the computer’s floating-point hardware.
+
+Integers. An integer constant is a sequence of digits, possibly beginning with a minus sign (˜).
+For instance:
+
+#+begin_src 
+0 ˜23 01234 ˜85601435654678
+
+  ~ is minus sign , unfortunate.
+  
+#+end_src
+
+Integer operations include addition (+), subtraction (-), multiplication (*), division (div) and remainder (mod).
+
+These are infix operators with conventional precedences: thus in
+
+Real numbers. A real constant contains a decimal point or E notation, or both.
+
+For instance:
+
+#+begin_src 
+0.01 2.718281828 ˜1.2E12 7E˜5
+#+end_src
+
+The ending En means ‘times the nth power of 10.’ A negative exponent begins
+with the unary minus sign (˜). Thus 123.4E˜2 denotes 1.234.
+Negative real numbers begin with unary minus (˜).
+
+Infix operators for reals include addition (+), subtraction (-), multiplication (*) and division (/).
+
+2.4.2 Function Application Precedence
+
+Function application binds more tightly than infix operators.
+
+For instance, area a + b is equivalent to (area a) + b, not area (a + b).
+
+2.4.3 Exponents are not signed
+
+Neither + nor - may appear in the exponent of a real number.
+
+E`3 or E3 , but never E-3 or E+3 as might be expected
+
+#+begin_src sml :tangle "code/value.sml"    :results none
+  fun square x = x * x ;  
+#+end_src
+
+Book says the definiton of square gives an error , but defaults to assume x is an int .
+
+Here below , we say the argument to square is a real number 
+
+#+begin_src sml :tangle "code/value.sml"  :results none
+          (* type of x is real  *)
+  fun square (x:real) = x * x ;
+#+end_src
+
+
+
+Here below , we say that the Or we can specify the end result of square
+
+#+begin_src sml :tangle "code/value.sml" :results none
+  (* type of square is ? -> real *)
+  fun square x : real = x * x ;  
+#+end_src
+
+If argument in definition is a name , just assumed no type has been declared.
+
+Arithmetic and the standard library
+
+Int.abs , absolute value
+
+Int.max , maximum of two fix ints 
+
+Int.min , minimum of two fix ints 
+
+Int.mod , the remainder operation
+
+Int.div , the division operation
+
+2.5 Strings and Characters
+
+
+99 Problems 
+
+#+begin_src sml :tangle "code/value.sml" :results none
+  (* type of square is ? -> real *)
+  fun square x : real = x * x ;  
+#+end_src
+
+
+
+#+begin_src sml :exports code 
+  who dares wins
+#+end_src
+
+
 
 #+CAPTION: This is a queue , first in first out 
 #+NAME:   fig:queue-img
 [[./images/queueImg.jpg]]
 
 #+begin_src sml :exports code 
-
-  hd of one element queue is x
-  hd enq (empty ,x ) = x
-
-  otherwise queue has more elements find hd in first of enq
-      enq(empty,1)
-      enq(enq(empty,1),2)
-      enq(enq(enq(empty,1),2),3)
-      enq(enq(enq(enq(empty,1),2),3),4)
-      enq(enq(enq(enq(enq(empty,1),2),3),4),5)
-      enq(enq(enq(enq(enq(enq(empty,1),2),3),4),5),6)
-
+  who dares wins
 #+end_src
 
