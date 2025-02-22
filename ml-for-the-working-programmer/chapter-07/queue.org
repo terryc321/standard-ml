@@ -1,0 +1,380 @@
+# C-e C-h h for html output 
+# C-c C-v t  org-babel-tangle  tangle current code block only
+# C-c C-v f  org-babel-tangle-file   tangle entire file
+# :session *sml*
+# tab for autocompletion 
+
+# org mode
+
+# standard-ml documentation
+
+# Here is some text that I want in *@@html:<font color = "red">@@BOLD RED@@html:</font>@@*
+
+#+CAPTION: This is a queue , first in first out 
+#+NAME:   fig:queue-img
+[[./images/queueImg.jpg]]
+
+The first implementation of queue uses a linked list.
+
+Implements a queue using a list
+
+An empty queue is the empty list ```[]```
+
+Enqueue appends entire queue onto a single element list.   This is costly if the queue is long , effectively traverse entire queue then cons the tail 
+
+# This is a comment and should not appear in the final result
+
+#+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results value code :output replace :session *sml*
+  structure Queue1 =
+  struct
+  type 'a t = 'a list;
+  exception E ;
+  val empty = [];
+  (* en-queue : put someone at the end of the queue *)
+  fun enq(q,x) = q @ [x ];  (* @ is append*)
+  fun null (x :: q) = false  (* :: is cons operator *)
+    | null _ = true;
+  fun hd (x ::q) = x
+    | hd [] = raise E ;    (* [] is empty list  *)
+  fun deq(x ::q) = q   (* de-queue : take someone from the front of the shopping queue  *)
+    | deq [] = raise E ;  (* raises an exception E  *)
+  end;
+
+  Queue1.deq ["We","happy","few"];
+#+end_src
+
+#+RESULTS:
+#+begin_src sml
+val it = ["happy","few"] : string list
+#+end_src
+
+Queue2 implementation declares a datatype with two constructors
+
+empty
+
+enq (enqueue) 
+
+ Queue2 defines a new datatype and two constructors empty and enq .
+
+queue is empty if queue is the empty constructor
+#+begin_src sml :exports code 
+
+  hd of one element queue is x
+  hd enq (empty ,x ) = x
+
+  otherwise queue has more elements find hd in first of enq
+      enq(empty,1)
+      enq(enq(empty,1),2)
+      enq(enq(enq(empty,1),2),3)
+      enq(enq(enq(enq(empty,1),2),3),4)
+      enq(enq(enq(enq(enq(empty,1),2),3),4),5)
+      enq(enq(enq(enq(enq(enq(empty,1),2),3),4),5),6)
+
+#+end_src
+
+      
+  when we add someone to end of queue (called enqueue) we simply make a constructor
+  of old queue and new person we added
+
+       enq( old-queue , new-person )
+
+  if we want to find the front of the queue (Queue2.hd) we need to recursively
+  go into the first element of enq constructor
+        enq ( A , B) will repeatedly go into A
+        until we pattern match on enq ( empty , X ) return X 
+
+  dequeue take someone from the front of the list we need to again repeatedly go into
+  first element
+         enq (A , B) will repeatedly go into A until
+        match on enq ( empty , X) which will return empty  ie taken X from front of queue
+         as it recursively comes back down the stack , rebuilds the queue
+          with first person taken from queue
+
+      if queue is empty when we deque , raise an exception since no queue to dequeue
+
+
+#+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results value code :output replace :session *sml*
+    structure Queue2 =
+    struct
+    datatype 'a t = empty
+    	       | enq of 'a t * 'a;
+    exception E ;
+    fun null (enq _) = false
+      | null empty   = true;
+    fun hd (enq(empty,x )) = x
+      | hd (enq(q,x ))     = hd q
+      | hd empty           = raise E ;
+    fun deq (enq(empty,x )) = empty
+      | deq (enq(q,x ))     = enq(deq q, x )
+      | deq empty           = raise E ;
+    end;
+
+    fun last (Queue2.enq(q,x )) = x ;
+
+    val tmp = Queue2.empty;
+
+#+end_src
+
+Regarding Queue2
+
+Our datatype declaration flouts the convention that constructor names start
+with a capital letter (Section 4.4). Within the confines of a small structure this is
+a minor matter, but to export such a constructor is questionable.
+
+#+RESULTS:
+#+begin_src sml
+stdIn:1086.5-1086.32 Warning: match nonexhaustive
+          enq (q,x) => ...
+  
+#+end_src
+
+Queue3 uses two lists A B
+
+idea behind this is that cons-ing is a cheap operation
+
+represent tail of queue as a something that can be quickly cons-ed onto
+
+to put x onto end of queue is a single cons operation :: 
+
+#+begin_src sml :exports code 
+ Queue ( _ , tails ) -> Queue ( _ , x :: tails ) 
+#+end_src
+
+an empty queue is A B both empty
+
+norm when A empty , swaps A with reverse B , B becomes empty
+
+norm when heads A is not empty just returns input , acts like identity function
+
+when want to enqueue x  -> norm the queue with x cons'd onto tails
+
+front of queue is hd of heads A
+
+deque take someone off the front of the queue , just norm Queue heads tails
+
+#+begin_src sml :exports code 
+ Queue ( x :: heads , tails ) -> norm $ Queue ( heads , tails )
+#+end_src
+
+Queue3 is due to (Burton, 1982)
+
+#+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+
+  structure Queue3 =
+  struct
+  datatype 'a t = Queue of ('a list * 'a list);
+  exception E ;
+  val empty = Queue([],[]);
+  fun norm (Queue([],tails)) = Queue(rev tails, [])
+    | norm q = q;
+  fun enq(Queue(heads,tails), x ) = norm(Queue(heads, x ::tails));
+  fun null (Queue([],[])) = true
+    | null _ = false;
+  fun hd (Queue(x ::_,_)) = x
+    | hd (Queue([],_)) = raise E ;
+  fun deq(Queue(x ::heads,tails)) = norm(Queue(heads,tails))
+    | deq(Queue([],_)) = raise E ;
+  end;
+  
+#+end_src
+
+
+
+#+begin_src sml :tangle "code/add.sml"  :exports both :noweb yes :results value code :output replace :session *sml*
+      (* this is some standard ml code *)
+      val a = 1 + 2 ;
+      [1,2,3,5,a,a] 
+#+end_src
+
+#+RESULTS:
+#+begin_src sml
+val it = [1,2,3,5,3,3] : int list
+#+end_src
+
+#+begin_src ditaa :file code/blue.png :cmdline -r
++---------+
+| cBLU    |
+|         |
+|    +----+
+|    |cPNK|
+|    |    |
++----+----+
+#+end_src
+
+#+RESULTS:
+[[file:code/blue.png]]
+
+we can look at the structures that we have defined so far
+
+#+begin_src
+- use "code/queue.sml";
+[opening code/queue.sml]
+structure Queue1 : sig
+  type 'a t = 'a list
+  exception E
+  val empty : 'a list
+  val enq : 'a list * 'a -> 'a list
+  val null : 'a list -> bool
+  val hd : 'a list -> 'a
+  val deq : 'a list -> 'a list
+end
+val it = ["happy","few"] : string list
+structure Queue2 : sig
+  datatype 'a t = empty | enq of 'a t * 'a
+  exception E
+  val null : 'a t -> bool
+  val hd : 'a t -> 'a
+  val deq : 'a t -> 'a t
+end
+code/queue.sml:33.5-33.32 Warning: match nonexhaustive
+          enq (q,x) => ...
+  
+val last = fn : 'a Queue2.t -> 'a
+val tmp = empty : 'a Queue2.t
+structure Queue3 : sig
+  datatype 'a t = Queue of 'a list * 'a list
+  exception E
+  val empty : 'a t
+  val norm : 'a t -> 'a t
+  val enq : 'a t * 'a -> 'a t
+  val null : 'a t -> bool
+  val hd : 'a t -> 'a
+  val deq : 'a t -> 'a t
+end
+val it = () : unit
+- 
+#+end_src
+
+7.4 The intended signature for queues
+
+Although the structures Queue1, Queue2 and Queue3 differ, they each
+implement queues. Moreover they share a common interface, defined by signature QUEUE:
+
+#+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+signature QUEUE =
+sig
+type 'a t  (*type of queues*)
+exception E (*for errors in hd, deq*)
+val empty: 'a t  (*the empty queue*)
+val enq : 'a t * 'a -> 'a t  (*add to end*)
+val null : 'a t -> bool  (*test for empty queue*)
+val hd : 'a t -> 'a  (*return front element*)
+val deq : 'a t -> 'a t  (*remove from front*)
+end;
+  
+#+end_src
+
+#+RESULTS:
+#+begin_src sml
+val it = "stdIn" : string
+#+end_src
+
+Each entry in a signature is called a specification. The comments after each
+specification are optional, but make the signature more informative. A structure
+is an instance of this signature provided it declares, at least,
+
+• a polymorphic type α t (which need not admit equality)
+
+• an exception E
+
+• a value empty of type α t
+
+• a value enq of type α t × α → α t
+
+• a value null of type α t → bool
+
+• a value hd of type α t → α
+
+• a value deq of type α t → α t
+  
+
+    7.5 Signature constraints
+
+    Transparent signature constraints. The constraints we have used until now, in-
+    dicated by a colon (:), are transparent. To see what this implies, let us constrain
+    our existing queue structures using signature QUEUE:
+
+#+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+
+  structure S1: QUEUE = Queue1;
+  structure S2: QUEUE = Queue2;
+  structure S3: QUEUE = Queue3;
+
+  S1.deq ["We","band","of","brothers"];
+
+  val Queue3.Queue(heads,tails) = S3.enq(S3.enq(S3.empty,"Saint"), "Crispin");
+    
+#+end_src
+
+#+RESULTS:
+#+begin_src sml
+structure S2 : QUEUE
+#+end_src
+
+
+  These declarations make S 1, S 2 and S 3 denote the same structures as Queue1,
+  Queue2 and Queue3, respectively. However, the new structures are constrained
+  to have the signature QUEUE. The types α Queue2.t and α S 2.t are identical,
+  yet Queue2.empty is a constructor while S 2.empty may only be used as a
+  value. The structures Queue3 and S 3 are identical, yet Queue3.norm is a
+  function while S 3.norm means nothing.
+  A transparent signature constraint may hide components, but they are still
+  present. This cannot be called abstraction. Structure S 1 does not hide its repre-
+  sentation at all; type α S 1.t is identical to α list.
+
+  > ["band", "of", "brothers"] : string S1.t
+  Structures S 2 and S 3 may seem more abstract, because they declare the type
+  α t and hide its constructors. Without the constructors, pattern-matching is not
+  available to take apart values of the type and disclose the representation. How-
+  ever, the constructor Queue3.Queue may be used in a pattern to take apart a
+  value of type α S 3.t:
+  > val heads = ["Saint"] : string list
+  > val tails = ["Crispin"] : string list
+  The concrete structure, Queue3, provides a loophole into its abstract view, S 3.
+  Data abstraction is compromised in another way. For each of our queue struc-
+  tures, type α t admits equality testing. The equality test compares internal rep-
+  resentations, not queues. Under Representation 3, the values ([1, 2], []) and
+  ([1], [2]) denote the same queue, but the equality test says they are different.
+
+  Opaque signature constraints. Using the symbol :> instead of a colon makes
+the constraint opaque. The constraint hides all information about the new struc-
+ture except its signature. Let us create some truly abstract queue structures by
+constraining the concrete ones:
+
+The components of the constrained structure are divorced from their counter-
+parts in the original structure. Structure AbsQueue1 represents queues by lists,
+but we cannot see this:
+
+#+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+  (* an opaque :> signature constraint *)
+
+  structure AbsQueue1 :> QUEUE = Queue1;
+  structure AbsQueue2 :> QUEUE = Queue2;
+  structure AbsQueue3 :> QUEUE = Queue3;
+
+#+end_src
+
+#+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+(* AbsQueue1.deq ["We","band","of","brothers"];  *)
+#+end_src
+
+#+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+(* AbsQueue3.empty = AbsQueue3.empty; *)
+#+end_src
+
+
+Limitations. An opaque signature constraint is perfect for declaring an abstract
+type of queues. The abstract structure can be made from an existing concrete
+structure, as in the AbsQueue declarations above, or we can simply constrain
+the original structure declaration:
+
+structure Queue :> QUEUE = struct . . . end;
+
+But the two kinds of signature constraints give us an all-or-nothing choice,
+which is awkward for complex abstract types. Signature DICTIONARY spec-
+ifies two types: key is the type of search keys; α t is the type of dictionaries
+(see Section 4.14). Type α t should be abstract, but key should be something
+concrete, like string. Otherwise, we should have no way to refer to keys; we
+should be unable to call lookup and update! The next section describes a more
+flexible approach to declaring abstract types.
+
