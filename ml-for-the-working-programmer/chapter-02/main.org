@@ -1,0 +1,88 @@
+
+Chapter 2 Names Functions and Types
+
+#+begin_src sml :tangle "code/value.sml"  :exports both :noweb yes :results value code :output replace :session *sml*
+
+  1 + 2 ;
+  3.2 - 1.2;
+  Math.sqrt 2.0 ;
+
+#+end_src
+
+Value declarations
+
+#+begin_src sml :tangle "code/value.sml"  :exports both :noweb yes :results none :output replace :session *sml*
+
+  val seconds = 60;
+  val minutes = 60;
+  val hours = 24;
+  val product = seconds * minutes * hours ;
+  val seconds_in_hour = seconds * minutes ;
+  val pi = 3.14159265;
+  val r = 2.0;
+  val area = pi * r * r;
+  
+#+end_src
+
+Redundant it
+
+Whilst the book mentions use of it , to refer to last expression evaluated at the toplevel
+in the repl , cannot use it in code because it is not defined there.
+
+2.2 Declaring functions
+
+#+begin_src sml :tangle "code/value.sml"  :exports both :noweb yes :results none :output replace :session *sml*
+
+  (* calculate the area of a circle *)
+  val area = fn r => pi * r * r;
+  area( 2.0 );
+  area 1.0 ;
+  (* sometimes an extra semi colon is helpful *)
+  val pi = 0.0 ;
+  area 3.0 ;
+  (* area continues to work - see static binding *)
+  
+#+end_src
+
+2.3 Identifiers in standard ml
+
+abstype and andalso as case datatype do
+else end eqtype exception fn fun functor
+handle if in include infix infixr let local
+nonfix of op open orelse raise rec
+sharing sig signature struct structure
+then type val where while with withtype
+
+Watch especially for the short ones: as, fn, if, in, of, op.
+
+Perhaps emacs can warn us about this by highlighting words differently.
+
+Symbolic names
+
+! % & $ # + - * / : < = > ? @ \ ˜ ‘ ˆ |
+
+Reserved special characters - these cannot form part of symbol name 
+
+: | = => -> # :>
+
+Addendum : the vertical bar appears in both symbolic name and reserved special characters
+
+#+CAPTION: This is a queue , first in first out 
+#+NAME:   fig:queue-img
+[[./images/queueImg.jpg]]
+
+#+begin_src sml :exports code 
+
+  hd of one element queue is x
+  hd enq (empty ,x ) = x
+
+  otherwise queue has more elements find hd in first of enq
+      enq(empty,1)
+      enq(enq(empty,1),2)
+      enq(enq(enq(empty,1),2),3)
+      enq(enq(enq(enq(empty,1),2),3),4)
+      enq(enq(enq(enq(enq(empty,1),2),3),4),5)
+      enq(enq(enq(enq(enq(enq(empty,1),2),3),4),5),6)
+
+#+end_src
+
