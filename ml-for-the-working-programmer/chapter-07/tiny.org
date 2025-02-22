@@ -1,0 +1,23 @@
+
+#+CAPTION: This is a queue , first in first out 
+#+NAME:   fig:queue-img
+[[./images/queueImg.jpg]]
+
+#+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results value code :output replace :session *sml*
+  structure Queue1 =
+  struct
+  type 'a t = 'a list;
+  exception E ;
+  val empty = [];
+  (* en-queue : put someone at the end of the queue *)
+  fun enq(q,x) = q @ [x ];  (* @ is append*)
+  fun null (x :: q) = false  (* :: is cons operator *)
+    | null _ = true;
+  fun hd (x ::q) = x
+    | hd [] = raise E ;    (* [] is empty list  *)
+  fun deq(x ::q) = q   (* de-queue : take someone from the front of the shopping queue  *)
+    | deq [] = raise E ;  (* raises an exception E  *)
+  end;
+
+  Queue1.deq ["We","happy","few"];
+#+end_src

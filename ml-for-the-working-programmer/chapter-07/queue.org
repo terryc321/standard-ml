@@ -1,6 +1,27 @@
+
+# fix the comint mode
+# (process-send-string "*sml*" "1 + 2 ;\n")
+# 
+
+# code and
+# editing the code in editor also changes the code in the document?
+
+# no actually it does not 
+# this file generates
+
+# code/map.sml
+# code/queue.sml
+
+
+# some css nuts 
+# pre.src {
+#     background-color: transparent;
+#     color: inherit;
+# }
+
 # C-e C-h h for html output 
 # C-c C-v t  org-babel-tangle  tangle current code block only
-# C-c C-v f  org-babel-tangle-file   tangle entire file
+ # C-c C-v f  org-babel-tangle-file   tangle entire file
 # :session *sml*
 # tab for autocompletion 
 
@@ -115,18 +136,19 @@ queue is empty if queue is the empty constructor
 
 #+end_src
 
+#+RESULTS:
+#+begin_src sml
+stdIn:67.5-67.32 Warning: match nonexhaustive
+          enq (q,x) => ...
+  
+#+end_src
+
 Regarding Queue2
 
 Our datatype declaration flouts the convention that constructor names start
 with a capital letter (Section 4.4). Within the confines of a small structure this is
 a minor matter, but to export such a constructor is questionable.
 
-#+RESULTS:
-#+begin_src sml
-stdIn:1086.5-1086.32 Warning: match nonexhaustive
-          enq (q,x) => ...
-  
-#+end_src
 
 Queue3 uses two lists A B
 
@@ -136,9 +158,9 @@ represent tail of queue as a something that can be quickly cons-ed onto
 
 to put x onto end of queue is a single cons operation :: 
 
-#+begin_src sml :exports code 
- Queue ( _ , tails ) -> Queue ( _ , x :: tails ) 
-#+end_src
+# #+begin_src sml :exports code 
+#  Queue ( _ , tails ) -> Queue ( _ , x :: tails ) 
+# #+end_src
 
 an empty queue is A B both empty
 
@@ -152,13 +174,13 @@ front of queue is hd of heads A
 
 deque take someone off the front of the queue , just norm Queue heads tails
 
-#+begin_src sml :exports code 
- Queue ( x :: heads , tails ) -> norm $ Queue ( heads , tails )
-#+end_src
+# #+begin_src sml :exports code 
+#  Queue ( x :: heads , tails ) -> norm $ Queue ( heads , tails )
+# #+end_src
 
 Queue3 is due to (Burton, 1982)
 
-#+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+#+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results output :output replace :session *sml*
 
   structure Queue3 =
   struct
@@ -177,6 +199,9 @@ Queue3 is due to (Burton, 1982)
   end;
   
 #+end_src
+
+#+RESULTS:
+: val it = [(538,"languages")] : (int * string) list
 
 
 
@@ -322,21 +347,30 @@ structure S2 : QUEUE
   present. This cannot be called abstraction. Structure S 1 does not hide its repre-
   sentation at all; type α S 1.t is identical to α list.
 
+
+#+begin_src 
   > ["band", "of", "brothers"] : string S1.t
+#+end_src
+  
   Structures S 2 and S 3 may seem more abstract, because they declare the type
   α t and hide its constructors. Without the constructors, pattern-matching is not
   available to take apart values of the type and disclose the representation. How-
   ever, the constructor Queue3.Queue may be used in a pattern to take apart a
   value of type α S 3.t:
+  
+#+begin_src 
   > val heads = ["Saint"] : string list
   > val tails = ["Crispin"] : string list
+#+end_src
+  
   The concrete structure, Queue3, provides a loophole into its abstract view, S 3.
   Data abstraction is compromised in another way. For each of our queue struc-
   tures, type α t admits equality testing. The equality test compares internal rep-
   resentations, not queues. Under Representation 3, the values ([1, 2], []) and
   ([1], [2]) denote the same queue, but the equality test says they are different.
 
-  Opaque signature constraints. Using the symbol :> instead of a colon makes
+  
+  Opaque signature constraints. Using the symbol ```:>``` instead of a colon makes
 the constraint opaque. The constraint hides all information about the new struc-
 ture except its signature. Let us create some truly abstract queue structures by
 constraining the concrete ones:
@@ -346,6 +380,7 @@ parts in the original structure. Structure AbsQueue1 represents queues by lists,
 but we cannot see this:
 
 #+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+
   (* an opaque :> signature constraint *)
 
   structure AbsQueue1 :> QUEUE = Queue1;
@@ -354,12 +389,17 @@ but we cannot see this:
 
 #+end_src
 
+# alert ! 
+# empty source blocks cause wrong argument stringp , nil errors with no telling why
+
 #+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results code :output replace :session *sml*
 (* AbsQueue1.deq ["We","band","of","brothers"];  *)
+  "Error";
 #+end_src
 
 #+begin_src sml :tangle "code/queue.sml"  :exports both :noweb yes :results code :output replace :session *sml*
-(* AbsQueue3.empty = AbsQueue3.empty; *)
+  (* AbsQueue3.empty = AbsQueue3.empty; *)
+  "Error";
 #+end_src
 
 
@@ -368,7 +408,7 @@ type of queues. The abstract structure can be made from an existing concrete
 structure, as in the AbsQueue declarations above, or we can simply constrain
 the original structure declaration:
 
-structure Queue :> QUEUE = struct . . . end;
+# structure Queue :> QUEUE = struct . . . end;
 
 But the two kinds of signature constraints give us an all-or-nothing choice,
 which is awkward for complex abstract types. Signature DICTIONARY spec-
@@ -377,4 +417,248 @@ ifies two types: key is the type of search keys; α t is the type of dictionarie
 concrete, like string. Otherwise, we should have no way to refer to keys; we
 should be unable to call lookup and update! The next section describes a more
 flexible approach to declaring abstract types.
+
+
+# # aside on functors
+# # https://pages.cs.wisc.edu/~fischer/cs538.s06/lectures/Lecture25.pdf
+# # code available from ~cs538-1/public/sml/struct.sml
+
+
+#+begin_src sml :tangle "code/map.sml"  :exports code :noweb yes :results code :output replace :session *sml*
+
+  structure Mapping =
+  struct
+  exception NotFound;
+  val create = [];
+  fun lookup(key,[]) =
+      raise NotFound
+    | lookup(key,
+     	   (key1,value1)::rest) =
+      if key = key1
+      then value1
+      else lookup(key,rest);
+
+  fun insert(key,value,[]) =
+      [(key,value)]
+    | insert(key,value,
+    	   (key1,value1)::rest) =
+      if key = key1
+      then (key,value)::rest
+      else (key1,value1)::
+    	 insert(key,value,rest);
+  end;
+
+  Mapping.insert(538,"languages",[]);
+
+  open Mapping;
+
+
+#+end_src
+
+We can see the signature of Mapping created by standard ml
+
+#+begin_src sml 
+structure Mapping : sig
+  exception NotFound
+  val create : 'a list
+  val lookup : ''a * (''a * 'b) list -> 'b
+  val insert : ''a * 'b * (''a * 'b) list -> (''a * 'b) list
+end
+#+end_src
+
+You can define a signature as
+
+#+begin_src sml 
+signature name = sig
+ type definitions for values,
+ functions and exceptions
+end
+#+end_src
+
+For example,
+
+#+begin_src sml :tangle "code/map.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+signature Str2IntMapping =
+sig
+ exception NotFound;
+ val lookup: string * (string*int) list -> int;
+end;
+#+end_src
+
+Signatures can be used to
+
+• Restrict the type of a value or function in a structure.
+
+• Hide selected definitions that appear in a structure
+
+For example
+
+#+begin_src sml :tangle "code/map.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+  structure Str2IntMap : Str2IntMapping = Mapping;
+  open Str2IntMap;
+#+end_src
+  
+  defines a new structure, Str2IntMap,   created by restricting Mapping to the
+  Str2IntMapping signature. When  we do this we get
+  
+  Only lookup and NotFound are created, and lookup is limited to keys that are strings.
+
+# #+begin_src sml :tangle "code/map.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+# #+end_src
+
+
+Extending ML’s Polymorphism
+In languages like C++ and Java we
+must use types like void* or Object
+to simulate the polymorphism that
+ML provides. In ML whenever possible
+a general type (a polytype) is used
+rather than a fixed type. Thus in
+fun len([]) = 0
+ | len(a::b) = 1 + len(b);
+we get a type of
+ 'a list -> int
+because this is the most general type
+possible that is consistent with len’s
+definition.
+Is this form of polymorphism general
+enough to capture the general idea of
+making program definitions as typeindependent as possible?
+
+
+
+It isn’t, and to see why consider the
+following ML definition of a merge
+sort. A merge sort operates by first
+splitting a list into two equal length
+sublists. The following function does
+this:
+
+#+begin_src sml :tangle "code/map.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+
+fun split [] = ([],[])
+ | split [a] = ([a],[])
+ | split (a::b::rest) =
+ let val (left,right) =
+ split(rest) in
+ (a::left, b::right)
+ end;
+
+#+end_src
+
+After the input list is split into two
+halves, each half is recursively sorted,
+then the sorted halves are merged
+together into a single list.
+The following ML function merges
+two sorted lists into one:
+
+
+#+begin_src sml :tangle "code/map.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+
+  fun merge([],[]) = []
+     | merge([],hd::tl) = hd::tl
+     | merge(hd::tl,[]) = hd::tl
+     | merge(hd::tl,h::t) =
+     if hd <= h
+     then hd::merge(tl,h::t)
+     else h::merge(hd::tl,t);
+
+#+end_src
+
+#+RESULTS:
+#+begin_src sml
+val it = "stdIn" : string
+#+end_src
+
+With these two subroutines, a
+definition of a sort is easy:
+
+#+begin_src sml :tangle "code/map.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+
+  fun sort [] = []
+    | sort([a]) = [a]
+    | sort(a::b::rest) =
+      let val (left,right) =
+  	    split(a::b::rest) in
+  	merge(sort(left),
+  	      sort(right))
+      end;
+
+#+end_src
+
+This definition looks very general—it
+should work for a list of any type.
+Unfortunately, when ML types the
+functions we get a surprise:
+
+#+begin_src sml 
+
+val split = fn : 'a list ->
+ 'a list * 'a list
+val merge = fn : int list *
+ int list -> int list
+val sort = fn :
+ int list -> int list
+
+#+end_src
+
+split is polymorphic, but merge and
+sort are limited to integer lists!
+Where did this restriction come from?
+
+The problem is that we did a
+comparison in merge using the <=
+operator, and ML typed this as an
+integer comparison.
+We can make our definition of sort
+more general by adding a comparison
+function, le(a,b) as a parameter to
+merge and sort. If we curry this
+parameter we may be able to hide it
+from end users. Our updated
+definitions are:
+
+#+begin_src sml :tangle "code/map.sml"  :exports both :noweb yes :results code :output replace :session *sml*
+
+fun merge(le,[],[]) = []
+ | merge(le,[],hd::tl) = hd::tl
+ | merge(le,hd::tl,[]) = hd::tl
+ | merge(le,hd::tl,h::t) =
+ if le(hd,h)
+ then hd::merge(le,tl,h::t)
+ else h::merge(le,hd::tl,t)
+
+fun sort le [] = []
+ | sort le [a] = [a]
+ | sort le (a::b::rest) =
+ let val (left,right) =
+ split(a::b::rest) in
+ merge(le, sort le left,
+sort le right)
+ end;
+
+#+end_src
+
+
+Now the types of merge and sort are:
+
+#+begin_src sml
+
+     val merge = fn :
+     ('a * 'a -> bool) *
+     'a list * 'a list -> 'a list
+    val sort = fn : ('a * 'a -> bool)
+     -> 'a list -> 'a list
+#+end_src
+
+ We can now “customize” sort by
+  choosing a particular definition for
+  the le parameter:
+  
+  		
+#+begin_src sml :tangle "code/map.sml"  :exports both :noweb yes :results output :output replace :session *sml*
+  fun le(a,b) = a <= b;
+#+end_src
+
 
