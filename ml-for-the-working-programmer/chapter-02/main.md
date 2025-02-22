@@ -1,23 +1,18 @@
 
-Chapter 2 Names Functions and Types
+# Chapter 2 Names Functions and Types
 
-#+begin_src sml :tangle "code/value.sml"  :session *sml*
 
-  1 + 2 ;
-  3.2 - 1.2;
-  Math.sqrt 2.0 ;
+```
+1 + 2 ;
+3.2 - 1.2;
+Math.sqrt 2.0 ;
+```
 
-#+end_src
 
-#+RESULTS:
-: val it = 2 : real
+## 2.1 Value declarations
 
-Value declarations
-
-# #+begin_src sml :tangle "code/value.sml"  :exports both :noweb yes :results none :output replace :session *sml*
-#+begin_src sml :tangle "code/value.sml" :session *sml*
-
-  val seconds = 60;
+```
+val seconds = 60;
   val minutes = 60;
   val hours = 24;
   val product = seconds * minutes * hours ;
@@ -25,71 +20,61 @@ Value declarations
   val pi = 3.14159265;
   val r = 2.0;
   val area = pi * r * r;
-
-#+end_src
-
-#+RESULTS:
-: val minutes = 60 : int
+```
 
 Redundant it
 
 Whilst the book mentions use of it , to refer to last expression evaluated at the toplevel
 in the repl , cannot use it in code because it is not defined there.
 
-2.2 Declaring functions
+## 2.2 Declaring functions
 
-# #+begin_src sml :tangle "code/value.sml"  :exports both :noweb yes :results none :output replace :session *sml*
-
-#+begin_src :tangle "code/value.sml"
-  
-  (* calculate the area of a circle *)
-  val area = fn r => pi * r * r;
+```
+val area = fn r => pi * r * r;
   area( 2.0 );
   area 1.0 ;
   (* sometimes an extra semi colon is helpful *)
   val pi = 0.0 ;
   area 3.0 ;
   (* area continues to work - see static binding *)
+```
 
-#+end_src
-
-2.3 Identifiers in standard ml
+## 2.3 Identifiers in standard ml
 
 An alphabetic name must begin with a letter, which may be followed
 by any number of letters, digits, underscores (_), or primes (’), usually called
 single quotes. For instance:
 
-#+begin_src
+```
 x UB40 Hamlet_Prince_of_Denmark h’’3_H
-#+end_src
+```
 
 The case of letters matters, so q differs from Q. Prime characters are allowed
 because ML was designed by mathematicians, who like variables called x , x' , x'' .
 
 When choosing names, be certain to avoid ML’s keywords:
 
-#+begin_src
+```
 abstype and andalso as case datatype do else end eqtype exception fn fun functor handle
 if in include infix infixr let local nonfix of op open orelse raise rec sharing sig
 signature struct structure then type val where while with withtype
 
 Watch especially for the short ones: as, fn, if, in, of, op.
-
-#+end_src
+```
 
 Perhaps emacs can warn us about this by highlighting words differently.
 
 Symbolic names
 
-#+begin_src
+```
 ! % & $ # + - * / : < = > ? @ \ ˜ ‘ ˆ |
-#+end_src
+```
 
 Reserved special characters - these cannot form part of symbol name
 
-#+begin_src 
+```
 : | = => -> # :>
-#+end_src
+```
 
 Addendum : the vertical bar appears in both symbolic name and reserved special characters
 
@@ -97,20 +82,19 @@ Numbers, character strings and truth values
 The simplest ML values are integer and real numbers, strings and characters, and the booleans or truth values. This section introduces these types with
 their constants and principal operations.
 
-2.4 Arithmetic
+## 2.4 Arithmetic
 
 ML distinguishes between integers (type int) and real numbers (type real). Integer arithmetic is exact (with unlimited precision in some ML systems)
 while real arithmetic is only as accurate as the computer’s floating-point hardware.
 
-Integers. An integer constant is a sequence of digits, possibly beginning with a minus sign (˜).
+### Integers. An integer constant is a sequence of digits, possibly beginning with a minus sign (˜).
 For instance:
 
-#+begin_src 
+```
 0 ˜23 01234 ˜85601435654678
 
   ~ is minus sign , unfortunate.
-  
-#+end_src
+```
 
 Integer operations include addition (+), subtraction (-), multiplication (*), division (div) and remainder (mod).
 
@@ -120,9 +104,9 @@ Real numbers. A real constant contains a decimal point or E notation, or both.
 
 For instance:
 
-#+begin_src 
+```
 0.01 2.718281828 ˜1.2E12 7E˜5
-#+end_src
+```
 
 The ending En means ‘times the nth power of 10.’ A negative exponent begins
 with the unary minus sign (˜). Thus 123.4E˜2 denotes 1.234.
@@ -130,39 +114,37 @@ Negative real numbers begin with unary minus (˜).
 
 Infix operators for reals include addition (+), subtraction (-), multiplication (*) and division (/).
 
-2.4.2 Function Application Precedence
+### 2.4.2 Function Application Precedence
 
 Function application binds more tightly than infix operators.
 
 For instance, area a + b is equivalent to (area a) + b, not area (a + b).
 
-2.4.3 Exponents are not signed
+### 2.4.3 Exponents are not signed
 
 Neither + nor - may appear in the exponent of a real number.
 
 E`3 or E3 , but never E-3 or E+3 as might be expected
 
-#+begin_src sml :tangle "code/value.sml"    :results none
-  fun square x = x * x ;  
-#+end_src
+```
+fun square x = x * x ;
+```
 
 Book says the definiton of square gives an error , but defaults to assume x is an int .
 
 Here below , we say the argument to square is a real number 
 
-#+begin_src sml :tangle "code/value.sml"  :results none
-          (* type of x is real  *)
-  fun square (x:real) = x * x ;
-#+end_src
-
-
+```
+(* type of x is real  *)
+fun square (x:real) = x * x ;
+```
 
 Here below , we say that the Or we can specify the end result of square
 
-#+begin_src sml :tangle "code/value.sml" :results none
-  (* type of square is ? -> real *)
-  fun square x : real = x * x ;  
-#+end_src
+```
+(* type of square is ? -> real *)
+fun square x : real = x * x ;
+```
 
 If argument in definition is a name , just assumed no type has been declared.
 
@@ -178,68 +160,70 @@ Int.mod , the remainder operation
 
 Int.div , the division operation
 
-2.5 Strings and Characters
+## 2.5 Strings and Characters
 
 Messages and other text are strings of characters. They have type string.
 String constants are written in double quotes:
 
-#+begin_src sml :tangle "code/value.sml" :results none
+```
 "How now! a rat? Dead, for a ducat, dead!";
-#+end_src
-
 > "How now! a rat? Dead, for a ducat, dead!" : string
+```
+
 
 The concatenation operator (ˆ) joins two strings end-to-end:
 
-#+begin_src sml :tangle "code/value.sml" :results none
+```
 "Fair " ˆ "Ophelia";
-#+end_src
-
 > "Fair Ophelia" : string
+```
 
 The built-in function size returns the number of characters in a string. Here it
 
 refers to "Fair Ophelia":
 
-#+begin_src sml :tangle "code/value.sml" :results none
+```
 size (it);
-#+end_src
-
 > 12 : int
+```
 
 The space character counts, of course. The empty string contains no characters;
 
-#+begin_src sml :tangle "code/value.sml" :results none
-size("")
-#+end_src
+```
+size("");
+> 0
+```
 
-is 0.
+
 
 Here is a function that makes noble titles:
 
+```
 fun title(name) = "The Duke of " ˆ name;
-
 > val title = fn : string -> string
-
 title "York";
-
 > "The Duke of York" : string
+```
 
 
-Escape sequences
+### Escape sequences
 
+```
 Special characters. Escape sequences, which begin with a backslash (\), insert
 certain special characters into a string. Here are some of them:
-• \n inserts a newline character (line break).
-• \t inserts a tabulation character.
-• \" inserts a double quote.
-• \\ inserts a backslash.
-• \ followed by a newline and other white-space characters, followed by
+
+- \n inserts a newline character (line break).
+- \t inserts a tabulation character.
+- \" inserts a double quote.
+- \\ inserts a backslash.
+- \ followed by a newline and other white-space characters, followed by
 another \ inserts nothing, but continues a string across the line break.
 Here is a string containing newline characters:
-"This above all:\nto thine own self be true\n";
 
-Characters 
+"This above all:\nto thine own self be true\n";
+```
+
+## Characters 
 
 The type char. Just as the number 3 differs from the set {3}, a character differs
 from a one-character string. Characters have type char . The constants have the
@@ -253,19 +237,27 @@ range 0 ≤ k ≤ 255 then chr (k) returns the character with code k. Conversely
 is the integer code of the character c. We can use these to convert a number
 between 0 and 9 to a character between #"0" and #"9":
 
+```
 fun digit i = chr(i + ord #"0");
 > val digit = fn : int -> char
+```
+
+
 
 The functions str and String.sub convert between characters and strings. If c
 is a character then str (c) is the corresponding string. Conversely, if s is a string
 then String.sub(s, n) returns the nth character in s, counting from zero. Let
 us try these, first expressing the function digit differently:
 
+```
 fun digit i = String.sub("0123456789", i);
 > val digit = fn : int -> char
+```
 
+```
 str (digit 5);
 > "5" : string
+```
 
 The second definition of digit is preferable to the first, as it does not rely on
 character codes.
@@ -281,7 +273,7 @@ and chr , which previously operated on single-character strings.
 
 ===============================================================================================================================================================
 
-2.6 Truth values and conditional expressions
+## 2.6 Truth values and conditional expressions
 
 To define a function by cases — where the result depends on the outcome of a test — we employ a conditional expression.1 The test is an expression E of type bool, whose values are true and false. The outcome of the test
 chooses one of two expressions E1 or E2. The value of the conditional expression
@@ -316,11 +308,11 @@ behave differently from ordinary functions: the second operand is evaluated only
 if necessary. Their names reflect this sequential behaviour.
 ==============================================================================================================================================================
 
-Pairs, tuples and records
+## Pairs, tuples and records
 
 (a,b);
 
-#+begin_src sml :tangle "code/value.sml" :results none
+```
 val zerovec = (0,0);
 val a = (1.5,6.8);
 val b = (3.6, 0.9);
@@ -331,48 +323,44 @@ fun negvec (x : real ,y : real) = (~x , ~y) ;
 negvec (1.0,1.0);
 val bn = negvec b;
 type vec = real * real ;
-#+end_src
+```
 
 ==============================================================================================================================================================
 
-2.8 Functions with multiple arguments and results
+## 2.8 Functions with multiple arguments and results
 
-#+begin_src sml :tangle "code/value.sml" :results none
+```
 fun average (x,y) = (x + y) / 2.0;
-
 average(3.1,3.3);
-
 ((2.0,3.5),zerovec);
 
-(* need to add type constraint  *)
+(* needed to add type constraint on addvec - smlnj assume int *)
 fun addvec ((x1,y1),(x2,y2)) : real * real  = (x1+x2,y1+y2);
-
 addvec((8.9,4.4),b);
-
 addvec(it,(0.1,0.2));
-
 fun subvec(v1,v2) = addvec(v1,negvec v2);
-
 subvec(a,b);
-
 fun distance(v1,v2) = lengthvec(subvec(v1,v2));
-
 distance(a,b);
-
 fun scalevec(r,(x,y)) : vec = (r*x , r *y);
-
 scalevec(2.0,a);
-
 scalevec(2.0,it);
-#+end_src
+```
 
 
 # Page 32 Selecting components of a tuple
 
-#+begin_src sml :tangle "code/value.sml" :results none
+```
 val (xc,yc) = scalevec(4.0, a);
 val ((x1,y1), (x2,y2)) = (addvec(a,b), subvec(a,b));
-#+end_src
+```
+## The 0 Tuple - unit ()
+
+```
+see the type of procedure use to read in files
+- use;
+val it = fn : string -> unit
+```
 
 The 0-tuple and the type unit. Previously we have considered n-tuples for n ≥
 2. There is also a 0-tuple, written () and pronounced ‘unity,’ which has no
@@ -387,6 +375,7 @@ A function whose argument type is unit passes no information to its body
 when called. Calling the function simply causes its body to be evaluated. In
 Chapter 5, such functions are used to delay evaluation for programming with
 infinite lists.
+
 ==============================================================================================================================================================
 ==============================================================================================================================================================
 ==============================================================================================================================================================
@@ -398,21 +387,14 @@ infinite lists.
 ==============================================================================================================================================================
 ==============================================================================================================================================================
 
+```
 Problem 1
+?- my_last(X,[a,b,c,d]).
+X = d
 
-
-#+begin_src sml :tangle "code/99-problems.sml" :results none
-  
-  (*
-  Example:
-    ?- my_last(X,[a,b,c,d]).
-    X = d
-  ,*)
-     	
-  val X = List.last(["a","b","c","d"]);
-    	
-#+end_src
-
+val X = List.last(["a","b","c","d"]);
+```
+   
 ==============================================================================================================================================================
 
 
@@ -422,8 +404,7 @@ Problem 1
 
 ==============================================================================================================================================================
 
-#+begin_src :exports code 
-  who dares wins
+```
   Improvmenets
 
 1 - org mode standard ml fix , the mode is currently balked with stdIn string appearing
@@ -431,17 +412,13 @@ Problem 1
 
 2 - emacs oode editor assistance
 
-3 -   
+3 - 
          
-#+end_src
+```
 
 
 
 #+CAPTION: This is a queue , first in first out 
 #+NAME:   fig:queue-img
 [[./images/queueImg.jpg]]
-
-#+begin_src sml :exports code 
-  who dares wins
-#+end_src
 
