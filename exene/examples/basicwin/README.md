@@ -1,7 +1,8 @@
 This is an eXene version of the "basicwin" program from volume
 one of the O'Reilly & Assoc. X-windows books.
 
-![screenshot]("screenshots/2025-12-29-082751_1201x824_scrot.png")
+![a screenshot]("./screenshots/2025-12-29-082751_1201x824_scrot.png")
+
 
 
 ```
