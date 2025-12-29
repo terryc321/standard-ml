@@ -4,6 +4,12 @@ ml-for-the-working-programmer
 
 # eXene 
 
+# eXene basic window 
+
+![a screenshot](exene/examples/basicwin/screenshots/2025-12-29-082751_1201x824_scrot.png)
+
+
+
 # eXene triangle
 
 ![Screenshot](exene/examples/triangle/triange-screenshot-2025-12-29.png)
