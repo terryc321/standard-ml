@@ -26,7 +26,8 @@ structure BounceDM =
 		val {pos=PT{x, y}, sz=SIZE{wid, ht}, ...} = geomOfTile icon
 		in
 		  Drawing.textureBlt drawable pen {src = icon, dst_pos = pt}
-		end
+	  end
+	  (* receive is not even defined ! - how does this compile ? *)			    
 	  val evt = receive drawCh
 	  fun loop1 seqn = (case (poll evt)
 		 of NONE => (loop2 seqn)

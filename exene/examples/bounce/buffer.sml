@@ -7,6 +7,9 @@
  * Caveat: since the buffer is unbounded it is possible for the buffer to consume
  * excessive amounts of space, if the number of send operations greatly exceeds
  * the number of accepts over some time period.
+----
+this code appears broken for latest smlnj as it uses receive which is deprecated. - recv
+
  *)
 
 signature BUFFER_CHAN =

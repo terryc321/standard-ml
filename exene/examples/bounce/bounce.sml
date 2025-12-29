@@ -12,6 +12,9 @@ structure Bounce =
       fun initBounce dpyName = let
 	    val dpy = openDisplay (dpyName,NONE)
 	    val scr = defaultScreenOf dpy
+	   (* a poor mans debugger *)			      
+	    val _ = print ("Score: " ^ Int.toString 12345 ^ "\n");
+	    (* prints random *)
 	    val (win, inEnv, _ ) =
 		  EXeneWin.createSimpleTopWin scr {
 		      geom = WGEOM{pos=PT{x=0, y=0}, sz=SIZE{wid=400, ht=400}, border=1},

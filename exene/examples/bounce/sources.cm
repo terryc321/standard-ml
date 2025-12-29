@@ -18,6 +18,10 @@ is
   ../../sources.cm
 #endif
 
+(* buffer.sml *)
+(* multicast-sig.sml *)
+(* multicast.sml *)
+
 heads.sml
 bounce-dm.sml
 ball.sml

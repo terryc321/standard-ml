@@ -55,8 +55,8 @@ structure Ball =
 
       val delayEvt =
 	    CML.timeOutEvt
-		(Time.fromMicroseconds(IntInf.fromInt
-					   (1000000 div updatesPerSec)))
+		(* (Time.fromMicroseconds(IntInf.fromInt (1000000 div updatesPerSec))) *)
+		(Time.fromMicroseconds(100))
     in
 
     fun mkBallFn (win, mchan, drawCh) = let
