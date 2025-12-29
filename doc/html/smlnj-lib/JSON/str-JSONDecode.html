@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Asciidoctor 2.0.10">
+  <meta name="author" content="John Reppy">
+  <meta name="keywords" content="Standard ML, SML, SML/NJ Library">
+  <title>The JSONDecode structure</title>
+  <link rel="stylesheet" href="../styles/smlnj-lib-base.css" type="text/css" />
+  <link rel="stylesheet" href="../styles/smlnj-lib.css" type="text/css" />
+  <link rel="stylesheet" href="../styles/smlnj-lib-pygments.css">
+  <!-- support for latexmath -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      messageStyle: "none",
+      tex2jax: {
+	inlineMath: [["\\(", "\\)"]],
+	displayMath: [["\\[", "\\]"]],
+	ignoreClass: "nostem|nolatexmath"
+      },
+      asciimath2jax: {
+	delimiters: [["\\$", "\\$"]],
+	ignoreClass: "nostem|noasciimath"
+      },
+      TeX: { equationNumbers: { autoNumber: "none" } }
+    })
+    MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+      MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+	if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains('stemblock')) {
+	  data.math.root.display = "block"
+	}
+	return data
+      })
+    })
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</head>
+<body class="article">
+  <div id="layout-top-mask"></div> <!-- to mask scrolled content from below -->
+  <div id="layout-main">
+    <div id="layout-banner-spacer"></div>
+    <div id="layout-banner">
+      <div id="layout-logo">
+        <a href="https://smlnj.org">
+          <img src="../images/smlnj-logo.png" height="120" alt="SML/NJ logo" />
+        </a>
+      </div> <!-- layout-logo -->
+      <div id="layout-title">
+	<div id="layout-title-main"><a href="../index.html">The SML of NJ Library</a></div>
+	<div id="layout-title-description">The <code>JSONDecode</code> structure</div>
+      </div> <!-- layout-title -->
+    </div> <!-- layout-banner -->
+    <div class="clearer"></div>
+<div id="layout-toc">
+<div id="toc">
+<ul class="toc-lib-list">
+  <li class="toc-lib"><a href="../Controls/controls-lib.html"><span class="toc-lib-title">The Controls Library</span></a></li>
+  <li class="toc-lib"><a href="../HashCons/hash-cons-lib.html"><span class="toc-lib-title">The HashCons Library</span></a></li>
+  <li class="toc-lib"><a href="../INet/inet-lib.html"><span class="toc-lib-title">The INet Library</span></a></li>
+  <li class="toc-lib"><a href="../JSON/json-lib.html"><span class="toc-lib-title">The JSON Library</span></a>
+    <ul class="toc-page-list">
+      <li class="toc-page"><a href="str-JSONParser.html"><span class="toc-lib-page">The <code>JSONParser</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-JSONPrinter.html"><span class="toc-lib-page">The <code>JSONPrinter</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-JSONUtil.html"><span class="toc-lib-page">The <code>JSONUtil</code> structure</span></a></li>
+      <li class="toc-page"><span class="toc-lib-page" id="toc-current">The <code>JSONDecode</code> structure</span></li>
+      <li class="toc-page"><a href="str-JSONStreamParser.html"><span class="toc-lib-page">The <code>JSONStreamParser</code> structure</span></a></li>
+      <li class="toc-page"><a href="sig-JSON_STREAM_OUTPUT.html"><span class="toc-lib-page">The <code>JSON_STREAM_OUTPUT</code> signature</span></a></li>
+      <li class="toc-page"><a href="str-JSONBufferPrinter.html"><span class="toc-lib-page">The <code>JSONBufferPrinter</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-JSONStreamPrinter.html"><span class="toc-lib-page">The <code>JSONStreamPrinter</code> structure</span></a></li>
+    </ul>
+  </li>
+  <li class="toc-lib"><a href="../Reactive/reactive-lib.html"><span class="toc-lib-title">The Reactive Library</span></a></li>
+  <li class="toc-lib"><a href="../RegExp/regexp-lib.html"><span class="toc-lib-title">The RegExp Library</span></a></li>
+  <li class="toc-lib"><a href="../SExp/sexp-lib.html"><span class="toc-lib-title">The SExp Library</span></a></li>
+  <li class="toc-lib"><a href="../Unix/unix-lib.html"><span class="toc-lib-title">The Unix Library</span></a></li>
+  <li class="toc-lib"><a href="../Util/smlnj-lib.html"><span class="toc-lib-title">The Util Library</span></a></li>
+  <li class="toc-lib"><a href="../UUID/uuid-lib.html"><span class="toc-lib-title">The UUID Library</span></a></li>
+  <li class="toc-lib"><a href="../XML/xml-lib.html"><span class="toc-lib-title">The XML Library</span></a></li>
+</ul>
+</div> <!-- toc -->
+</div> <!-- layout-toc -->
+    <div id="layout-content-box">
+      <div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>JSONDecode</code> structure implements combinators for decoding <strong>JSON</strong> values.
+The design is based on <a href="https://package.elm-lang.org/packages/elm/json/latest/Json-Decode">
+<strong>Elm</strong>'s <code>JSON.Decode</code> module</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_synopsis">Synopsis</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sml"><span></span><span class="tok-kr">signature</span> <span class="tok-nn">JSON_DECODE</span>
+<span class="tok-kr">structure</span> <span class="tok-nn">JSONDecode</span> <span class="tok-p">:</span> <span class="tok-n">JSON_DECODE</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_interface">Interface</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sml"><span></span><span class="tok-kr">exception</span> <span class="tok-nc">JSONError</span> <span class="tok-kr">of</span> <span class="tok-nc">exn</span> <span class="tok-nc">*</span> <span class="tok-nc">JSON</span><span class="tok-err">.value</span>
+
+<span class="tok-kr">exception</span> <span class="tok-nc">NotBool</span>
+<span class="tok-nc">exception</span> <span class="tok-nc">NotInt</span>
+<span class="tok-nc">exception</span> <span class="tok-nc">NotNumber</span>
+<span class="tok-nc">exception</span> <span class="tok-nc">NotString</span>
+
+<span class="tok-nc">exception</span> <span class="tok-nc">NotObject</span>
+<span class="tok-nc">exception</span> <span class="tok-nc">FieldNotFound</span> <span class="tok-kr">of</span> <span class="tok-nc">string</span>
+
+<span class="tok-nc">exception</span> <span class="tok-nc">NotArray</span>
+<span class="tok-nc">exception</span> <span class="tok-nc">ArrayBounds</span> <span class="tok-kr">of</span> <span class="tok-nc">int</span>
+
+<span class="tok-nc">val</span> <span class="tok-nc">exnMessage</span> <span class="tok-nc">:</span> <span class="tok-nc">exn</span> <span class="tok-nc">-&gt;</span> <span class="tok-nc">string</span>
+
+<span class="tok-nc">type</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">decode</span> <span class="tok-p">:</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nn">JSON</span><span class="tok-p">.</span><span class="tok-n">value</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span>
+<span class="tok-kr">val</span> <span class="tok-nv">decodeString</span> <span class="tok-p">:</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-n">string</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span>
+<span class="tok-kr">val</span> <span class="tok-nv">decodeFile</span> <span class="tok-p">:</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-n">string</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">bool</span> <span class="tok-p">:</span> <span class="tok-n">bool</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">int</span> <span class="tok-p">:</span> <span class="tok-n">int</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">intInf</span> <span class="tok-p">:</span> <span class="tok-nn">IntInf</span><span class="tok-p">.</span><span class="tok-n">int</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">number</span> <span class="tok-p">:</span> <span class="tok-nn">Real64</span><span class="tok-p">.</span><span class="tok-n">real</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">string</span> <span class="tok-p">:</span> <span class="tok-n">string</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">null</span> <span class="tok-p">:</span> <span class="tok-nd">&#39;a</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">raw</span> <span class="tok-p">:</span> <span class="tok-nn">JSON</span><span class="tok-p">.</span><span class="tok-n">value</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">nullable</span> <span class="tok-p">:</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">option</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">try</span> <span class="tok-p">:</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">option</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">seq</span> <span class="tok-p">:</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span><span class="tok-p">)</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">field</span> <span class="tok-p">:</span> <span class="tok-n">string</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">reqField</span> <span class="tok-p">:</span> <span class="tok-n">string</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span><span class="tok-p">)</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">optField</span> <span class="tok-p">:</span> <span class="tok-n">string</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">option</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span><span class="tok-p">)</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">dfltField</span> <span class="tok-p">:</span> <span class="tok-n">string</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span><span class="tok-p">)</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">array</span> <span class="tok-p">:</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">list</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">sub</span> <span class="tok-p">:</span> <span class="tok-n">int</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">at</span> <span class="tok-p">:</span> <span class="tok-nn">JSONUtil</span><span class="tok-p">.</span><span class="tok-n">path</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">succeed</span> <span class="tok-p">:</span> <span class="tok-nd">&#39;a</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">fail</span> <span class="tok-p">:</span> <span class="tok-n">string</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">andThen</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span><span class="tok-p">)</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">orElse</span> <span class="tok-p">:</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">choose</span> <span class="tok-p">:</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-n">list</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">map</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span><span class="tok-p">)</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">map2</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;res</span><span class="tok-p">)</span>
+  <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span><span class="tok-p">)</span>
+  <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;res</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">map3</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;c</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;res</span><span class="tok-p">)</span>
+  <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;c</span> <span class="tok-n">decoder</span><span class="tok-p">)</span>
+  <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;res</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">map4</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;c</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;d</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;res</span><span class="tok-p">)</span>
+  <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;c</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;d</span> <span class="tok-n">decoder</span><span class="tok-p">)</span>
+  <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;res</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">tuple2</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span><span class="tok-p">)</span> <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span><span class="tok-p">)</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">tuple3</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;c</span> <span class="tok-n">decoder</span><span class="tok-p">)</span> <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;c</span><span class="tok-p">)</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">tuple4</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;c</span> <span class="tok-n">decoder</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;d</span> <span class="tok-n">decoder</span><span class="tok-p">)</span>
+  <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;a</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;b</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;c</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;d</span><span class="tok-p">)</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">delay</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-n">unit</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span><span class="tok-p">)</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;a</span> <span class="tok-n">decoder</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code><span class="kw">exception</span> JSONError <span class="kw">of</span> exn * JSON.value</code></dt>
+<dd>
+<p><a id="exn:JSONError"></a>
+raised when an error is detected during processing of a JSON value.
+The first argument, which is one of the exceptions described below,
+details the type of error and the second argument is the value that
+was being processed at the point of the error.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">exception</span> NotNull <span class="kw">of</span> JSON.value</code></dt>
+<dd>
+<p><a id="exn:NotNull"></a>
+used by the <a href="#val:null"><code>null</code></a> decoder when the argument
+is not the <strong>JSON</strong> <code>null</code> value.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">exception</span> NotBool <span class="kw">of</span> JSON.value</code></dt>
+<dd>
+<p><a id="exn:NotBool"></a>
+used by the <a href="#val:bool"><code>bool</code></a> decode when the argument
+is not a <strong>JSON</strong> boolean.
+This exception is the same as
+<a href="str-JSONUtil.html#exn:NotBool"><code>JSONUtil.NotBool</code></a>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">exception</span> NotInt <span class="kw">of</span> JSON.value</code></dt>
+<dd>
+<p><a id="exn:NotInt"></a>
+used by the <a href="#val:int"><code>int</code></a> and <a href="#val:intInf"><code>intInf</code></a>
+decoders when the argument is not a <strong>JSON</strong> integer number.
+This exception is the same as
+<a href="str-JSONUtil.html#exn:NotInt"><code>JSONUtil.NotInt</code></a>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">exception</span> NotNumber <span class="kw">of</span> JSON.value</code></dt>
+<dd>
+<p><a id="exn:NotNumber"></a>
+used by the <a href="#val:number"><code>number</code></a> decoder when the argument
+is not a <strong>JSON</strong> number.
+This exception is the same as
+<a href="str-JSONUtil.html#exn:NotNumber"><code>JSONUtil.NotNumber</code></a>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">exception</span> NotString <span class="kw">of</span> JSON.value</code></dt>
+<dd>
+<p><a id="exn:NotString"></a>
+used by the <a href="#val:string"><code>string</code></a> decoder when the argument
+is not a <strong>JSON</strong> string.
+This exception is the same as
+<a href="str-JSONUtil.html#exn:NotString"><code>JSONUtil.NotString</code></a>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">exception</span> NotObject <span class="kw">of</span> JSON.value</code></dt>
+<dd>
+<p><a id="exn:NotObject"></a>
+used by the <a href="#val:field"><code>field</code></a> decoder when the
+argument is not a <strong>JSON</strong> object.
+This exception is the same as
+<a href="str-JSONUtil.html#exn:NotObject"><code>JSONUtil.NotObject</code></a>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">exception</span> FieldNotFound <span class="kw">of</span> JSON.value * string</code></dt>
+<dd>
+<p><a id="exn:FieldNotFound"></a>
+This exception is used by the <a href="#val:field"><code>field</code></a> decoder
+when the given field is not found in an object.
+This exception is the same as
+<a href="str-JSONUtil.html#exn:FieldNotFound"><code>JSONUtil.FieldNotFound</code></a>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">exception</span> NotArray <span class="kw">of</span> JSON.value</code></dt>
+<dd>
+<p><a id="exn:NotArray"></a>
+This exception is used by the <a href="#val:array"><code>array</code></a> decoder
+when the argument is not a <strong>JSON</strong> array.
+This exception is the same as
+<a href="str-JSONUtil.html#exn:NotArray"><code>JSONUtil.NotArray</code></a>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">exception</span> ArrayBounds <span class="kw">of</span> JSON.value * int</code></dt>
+<dd>
+<p><a id="exn:ArrayBounds"></a>
+This exception is used when access to an array value is out of bounds.
+This exception is the same as
+<a href="str-JSONUtil.html#exn:ArrayBounds"><code>JSONUtil.ArrayBounds</code></a>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> exnMessage : exn -&gt; string</code></dt>
+<dd>
+<p><code>exnMessage exn</code> returns an error-message string for the exception value
+<code>exn</code>.  This function produces specialized messages for the
+<a href="#exn:JSONError"><code>JSONError</code></a> wrapped around the other exceptions defined
+in this structure (or the <a href="https://standardml.org/Basis/general.html#SIG:GENERAL.Fail:EXN"><code>Fail</code></a>
+exception).  It falls back to the
+<a href="https://standardml.org/Basis/general.html#SIG:GENERAL.exnMessage:VAL">General.exnMessage</a>
+function for other exceptions.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">type</span> 'a decoder'</code></dt>
+<dd>
+<p>the type of a decoder that decodes a <strong>JSON</strong> value to a value of type <code>'a</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> decode : 'a decoder -&gt; JSON.value -&gt; 'a</code></dt>
+<dd>
+<p><code>decode d jv</code> decodes the <strong>JSON</strong> value <code>jv</code> using the decoder <code>d</code>.
+Failure to decode will be signaled by raising an exception that depends on the
+decoder and value.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> decodeString : 'a decoder -&gt; string -&gt; 'a</code></dt>
+<dd>
+<p><code>decode d s</code> decodes the <strong>JSON</strong> value that results from parsing the string <code>s</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> decodeFile : 'a decoder -&gt; string -&gt; 'a</code></dt>
+<dd>
+<p><code>decode d f</code> decodes the <strong>JSON</strong> value that results from parsing the file <code>f</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> bool : bool decoder</code></dt>
+<dd>
+<p>decodes a <strong>JSON</strong> Boolean value.  This decoder raises the
+exception value <code>JSONError(NotBool, jv)</code> if the value <code>jv</code>
+is not a <strong>JSON</strong> Boolean.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> int : int decoder</code></dt>
+<dd>
+<p>decodes a <strong>JSON</strong> integer value.  This decoder raises the
+exception value <code>JSONError(NotInt, jv)</code> if the argument <code>jv</code> is not a
+<strong>JSON</strong> integer value and the exception value <code>JSONError(Overflow, jv)</code>
+if the integer is too large to be represented as an <code>Int.int</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> intInf : IntInf.int decoder</code></dt>
+<dd>
+<p>decodes a <strong>JSON</strong> integer value.  This decoder raises the exception
+value <code>JSONError(NotInt, jv)</code> if the argument <code>jv</code> is not a <strong>JSON</strong>
+integer value.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> number : Real64.real decoder</code></dt>
+<dd>
+<p>decodes a <strong>JSON</strong> number value.  This decoder raises the
+exception value <code>JSONError(NotNumber, jv)</code> if the value <code>jv</code>
+is not a <strong>JSON</strong> number.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> string : string decoder</code></dt>
+<dd>
+<p>decodes a <strong>JSON</strong> string value.  This decoder raises the
+exception value <code>JSONError(NotString, jv)</code> if the argument <code>jv</code> is not a
+<strong>JSON</strong> string.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> null : 'a -&gt; 'a decoder</code></dt>
+<dd>
+<p><code>null v</code> returns a decoder for the <strong>JSON</strong> <code>null</code> value.  When used to decode
+a <code>null</code> value, it will return its argument <code>v</code>; otherwise it will raise the
+exception value <code>JSONError(NotNull, jv)</code> when the argument <code>jv</code> is not a
+<strong>JSON</strong> null value.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> raw : JSON.value decoder</code></dt>
+<dd>
+<p>this decoder returns the raw <strong>JSON</strong> value that it is applied to (<em>i.e.</em>, it
+is the identity decoder).</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> rawObject : (string * JSON.value) list decoder</code></dt>
+<dd>
+<p>this decoder returns the fields of a <strong>JSON</strong> object as a labelled list
+of raw <strong>JSON</strong> values.  It will raise the exception value
+<code>JSONError(NotObject, v)</code> when the argument <code>v</code> is not a <strong>JSON</strong> object.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> rawArray : JSON.value vector decoder</code></dt>
+<dd>
+<p>this decoder returns the elements of a <strong>JSON</strong> array as a vector
+of raw <strong>JSON</strong> values.  It will raise the exception value
+<code>JSONError(NotArray, v)</code> when the argument <code>v</code> is not a <strong>JSON</strong> array.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> nullable : 'a decoder -&gt; 'a option decoder</code></dt>
+<dd>
+<p><code>nullable d</code> returns a decoder that maps <code>null</code> to <code>NONE</code> and otherwise applies
+<code>SOME</code> to the result of decoding the value using the decoder <code>d</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> try : 'a decoder -&gt; 'a option decoder</code></dt>
+<dd>
+<p><code>try d</code> returns a decoder that attempts to decode its argument using the decoder
+<code>d</code>.  If the decoder <code>d</code> fails (<em>i.e.</em>, raises a <code>JSONError</code> exception), then
+<code>NONE</code> is returned.  Otherwise, <code>SOME</code> is applied to the result od decoding the value.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> seq : 'a decoder &#8594; ('a -&gt; 'b) decoder -&gt; 'b decoder</code></dt>
+<dd>
+<p><code>seq d k</code> sequences decoding operations in a continuation-passing style.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> field : string -&gt; 'a decoder -&gt; 'a decoder</code></dt>
+<dd>
+<p><code>field lab d</code> returns a decoder that decodes the object field with the
+label <code>lab</code> using the decoder <code>d</code>.  It will raise the exception value
+<code>JSONError(NotObject, v)</code> when the argument <code>v</code> is not a <strong>JSON</strong> object and the
+exception value <code>JSONError(FieldNotFound lab, v)</code>, when <code>v</code> does not have
+a field with the specified label.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> reqField : string -&gt; 'a decoder -&gt; ('a -&gt; 'b) decoder -&gt; 'b decoder</code></dt>
+<dd>
+<p><code>reqField lab d k</code> returns a decoder for a required object field that can be
+sequenced in a continuation-passing style (it is equivalent to <code>seq (field lab d) k</code>).
+It will raise the exception value <code>JSONError(NotObject, v)</code> when the argument <code>v</code>
+is not a <strong>JSON</strong> object and the exception value  <code>JSONError(FieldNotFound lab, v)</code>
+when <code>v</code> does not have a field with the specified label.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> optField : string -&gt; 'a decoder -&gt; ('a option -&gt; 'b) decoder -&gt; 'b decoder</code></dt>
+<dd>
+<p><code>optField lab d k</code> returns a decoder for an optional object field that can be
+sequenced in a continuation-passing style.  If the field is not present in the
+object, then <code>NONE</code> is passed to <code>k</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> dfltField : string -&gt; 'a decoder -&gt; 'a -&gt; ('a -&gt; 'b) decoder -&gt; 'b decoder</code></dt>
+<dd>
+<p><code>dfltField lab d dflt k</code> returns a decoder for an optional object field that can be
+sequenced in a continuation-passing style.  If the field is not present in the
+object, then <code>dflt</code> is passed to <code>k</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> array : 'a decoder -&gt; 'a list decoder</code></dt>
+<dd>
+<p><code>array d</code> returns a decoder that when applied to a <strong>JSON</strong> array, will decode
+the elements of the array using the decoder <code>d</code> and return the result as a
+list.  It raises the exception value <code>JSONError(NotArray, jv)</code> if the
+argument <code>jv</code> is not a <strong>JSON</strong> array.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> sub : int -&gt; 'a decoder -&gt; 'a decoder</code></dt>
+<dd>
+<p><code>sub i d</code> returns a decoder that when given a <strong>JSON</strong> array, decodes the <code>i</code>'th
+element of the array using the decoder <code>d</code>.  This decoder will raise the
+exception value <code>JSONError(NotArray, jv)</code> if the argument <code>jv</code> is not a <strong>JSON</strong> array,
+and the exception value <code>JSONError(ArrayBounds i, jv)</code> if the index <code>i</code> is out of
+bounds for the array.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> at : JSONUtil.path -&gt; 'a decoder -&gt; 'a decoder</code></dt>
+<dd>
+<p><code>at path d</code> returns a decoder that uses the path to select a value
+from its argument (see <a href="str-JSONUtil.html#val:get"><code>JSONUtil.get</code></a>)
+and then decodes that value using the decoder <code>d</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> succeed : 'a -&gt; 'a decoder</code></dt>
+<dd>
+<p><code>succeed v</code> returns a decoder that always yields <code>v</code> for any argument.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> fail : string -&gt; 'a decoder</code></dt>
+<dd>
+<p><code>fail msg</code> returns a decoder that raises <code>JSONError(Fail msg, jv)</code> for
+any <strong>JSON</strong> input <code>jv</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> andThen : ('a -&gt; 'b decoder) -&gt; 'a decoder -&gt; 'b decoder</code></dt>
+<dd>
+<p><code>andThen f d</code> returns a decoder that first uses <code>d</code> to decode a value <code>v</code>
+from its argument and then returns the result of applying <code>f</code> to <code>v</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> orElse : 'a decoder * 'a decoder -&gt; 'a decoder</code></dt>
+<dd>
+<p><code>orElse (d1, d2)</code> returns a decoder that tries to decode its argument using
+the decoder d1` and, if that fails (<em>i.e.</em>, raises the <code>JSONError</code> exception),
+tries to decode the argument using <code>d2</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> choose : 'a decoder list -&gt; 'a decoder</code></dt>
+<dd>
+<p><code>choose ds</code> returns a decoder that tries to decode its argument
+using each of the decoders in the list <code>ds</code>, returning the first successful result.
+If all of the decoders fail (<em>i.e.</em>, they all raise the <code>JSONError</code> exception),
+then the exception value <code>JSONError(Fail "no choice", jv)</code> is raised, where <code>jv</code>
+is the <strong>JSON</strong> value being decoded.  The expression <code>choose [d1, &#8230;&#8203;, dn]</code> is
+equivalent to</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sml"><span></span><span class="tok-n">orElse</span><span class="tok-p">(</span><span class="tok-n">d1</span><span class="tok-p">,</span> <span class="tok-n">orElse</span><span class="tok-p">(</span><span class="tok-n">d2</span><span class="tok-p">,</span> <span class="tok-p">...,</span> <span class="tok-n">orElse</span><span class="tok-p">(</span><span class="tok-n">dn</span><span class="tok-p">,</span> <span class="tok-n">fail</span> <span class="tok-s2">&quot;no choice&quot;</span><span class="tok-p">)</span> <span class="tok-p">...</span> <span class="tok-p">))</span></code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> map : ('a -&gt; 'b) -&gt; 'a decoder -&gt; 'b decoder</code></dt>
+<dd>
+<p><code>map f d</code> returns a decoder that applies the function <code>f</code> to the result
+of decoding a <strong>JSON</strong> value using the decoder <code>d</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> map2 : ('a * 'b -&gt; 'res) -&gt; &#8230;&#8203; -&gt; 'res decoder</code></dt>
+<dt class="hdlist1"><code><span class="kw">val</span> map3 : ('a * 'b * 'c -&gt; 'res) -&gt; &#8230;&#8203; -&gt; 'res decoder</code></dt>
+<dt class="hdlist1"><code><span class="kw">val</span> map4 : ('a * 'b * 'c * 'd -&gt; 'res) -&gt; &#8230;&#8203; -&gt; 'res decoder</code></dt>
+<dt class="hdlist1"><code><span class="kw">val</span> tuple2 : ('a decoder * 'b decoder) -&gt; ('a * 'b) decoder</code></dt>
+<dd>
+<p><code>tuple2 (d1, d2)</code> is equivalent to <code>map2 Fn.id (d1, d2)</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> tuple3 : ('a decoder * 'b decoder * 'c decoder) -&gt; ('a * 'b * 'c) decoder</code></dt>
+<dd>
+<p><code>tuple3 (d1, d2, d3)</code> is equivalent to <code>map2 Fn.id (d1, d2, d3)</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> tuple4 : ('a decoder * 'b decoder * 'c decoder * 'd decoder) -&gt; ('a * 'b * 'c * 'd) decoder</code></dt>
+<dd>
+<p><code>tuple4 (d1, d2, d3, d4)</code> is equivalent to <code>map4 Fn.id (d1, d2, d3, d4)</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> delay : (unit -&gt; 'a decoder) -&gt; 'a decoder</code></dt>
+<dd>
+<p><code>delay f</code> returns a decoder that delays the application of <code>f</code> to produce the
+decoder and can be used to define recursive decoders.
+The expression <code>delay f</code> is equivalent to <code>andThen f (succeed ())</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_discussion">Discussion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A number of these combinators work best when composed using a infix <code>pipe</code> operator.
+For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sml"><span></span><span class="tok-kr">fun</span> <span class="tok-nf">|&gt;</span> <span class="tok-p">(</span><span class="tok-n">x</span><span class="tok-p">,</span> <span class="tok-n">f</span><span class="tok-p">)</span> <span class="tok-p">=</span> <span class="tok-n">f</span> <span class="tok-n">x</span>
+<span class="tok-kr">infix</span> <span class="tok-p">|</span><span class="tok-nf">&gt;</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">d</span> <span class="tok-p">=</span> <span class="tok-n">succeed</span> <span class="tok-p">(</span><span class="tok-kr">fn</span> <span class="tok-p">(</span><span class="tok-n">n</span> <span class="tok-p">:</span> <span class="tok-n">string</span><span class="tok-p">)</span> <span class="tok-p">=&gt;</span> <span class="tok-kr">fn</span> <span class="tok-p">(</span><span class="tok-n">a</span> <span class="tok-p">:</span> <span class="tok-n">int</span><span class="tok-p">)</span> <span class="tok-p">=&gt;</span> <span class="tok-p">{</span><span class="tok-n">name</span><span class="tok-p">=</span><span class="tok-n">n</span><span class="tok-p">,</span> <span class="tok-n">age</span><span class="tok-p">=</span><span class="tok-n">a</span><span class="tok-p">})</span>
+        <span class="tok-n">|&gt;</span> <span class="tok-n">reqField</span> <span class="tok-s2">&quot;name&quot;</span> <span class="tok-n">string</span>
+        <span class="tok-n">|&gt;</span> <span class="tok-n">reqField</span> <span class="tok-s2">&quot;age&quot;</span> <span class="tok-n">int</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_see_also">See Also</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="../Util/str-JSON.html"><code>JSON</code></a>,
+<a href="str-JSON.html"><code>JSONUtil</code></a>,
+<a href="json-lib.html"><em>The JSON Library</em></a></p>
+</div>
+</div>
+</div>
+      </div> <!-- content -->
+    </div> <!-- layout-content-box -->
+    <div id="layout-footer-box">
+      <div id="layout-footer">
+	<div id="layout-footer-text">
+	  <strong>SML/NJ</strong> Version 110.99.9 (November 4, 2025)<br />
+	  Last updated 2025-11-04 15:48:25 UTC
+	</div> <!-- layout-footer-text -->
+      </div> <!-- layout-footer -->
+    </div> <!-- layout-footer-box -->
+  </div> <!-- layout-main -->
+</body>
+</html>

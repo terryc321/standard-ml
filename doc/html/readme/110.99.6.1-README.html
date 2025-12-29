@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.23">
+<title>Standard ML of New Jersey Release Notes</title>
+<style>
+body {
+  font-size: 14pt;
+}
+div.smlnj-banner {
+  font-weight: bold;
+  text-align: center;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.smlnj-banner span.title {
+  font-size: 200%;
+}
+div.smlnj-banner span.subtitle {
+  font-size: 150%;
+}
+h2 {
+  font-size: 140%;
+}
+h3 {
+  font-size: 120%;
+}
+dd {
+  margin-left: 2em;
+  margin-bottom: 0.5em;
+}
+li {
+  margin-bottom: 0.5em;
+}
+span.important {
+  color: red;
+  text-weight: bold;
+}
+span.tt {
+  font-family: "Courier", monospace;
+}
+code {
+  font-family: "Courier", monospace;
+  white-space: pre;
+  color: darkblue;
+}
+.code {
+  font-family: "Courier", monospace;
+  white-space: pre;
+  color: darkblue;
+}
+span.kw {
+  font-family: "Courier", monospace;
+  font-weight: bold;
+  color: darkgreen;
+}
+span.com {
+  font-style: italic;
+  color: indianred;
+}
+span.exe {
+  font-weight: bold;
+}
+table.buglist {
+  margin-left: 2em;
+  font-size: 100%;
+}
+.buglist th {
+  border-bottom: 2px solid black;
+}
+span.bugid {
+  font-weight: bold;
+}
+p.compact {
+  margin-top: 0pt;
+  margin-bottom: 0pt;
+}
+.support-table {
+  margin-left: 2em;
+  font-size: 100%;
+}
+.support-table th {
+  text-align: left;
+  padding-right: 1em;
+  border-bottom: 2px solid black;
+}
+.support-table td {
+  padding-right: 1em;
+}
+p.tableblock {
+  padding-right: 1em;
+  margin-top: 0pt;
+  margin-bottom: 0pt;
+}
+th.halign-left,
+td.halign-left {
+  text-align: left;
+}
+th.halign-right,
+td.halign-right {
+  text-align: right;
+}
+th.halign-center,
+td.halign-center {
+  text-align: center;
+}
+
+
+</style>
+<style>
+pre.pygments .hll { background-color: #ffffcc }
+pre.pygments { background: #f8f8f8; }
+pre.pygments .tok-c { color: #3D7B7B; font-style: italic } /* Comment */
+pre.pygments .tok-err { border: 1px solid #FF0000 } /* Error */
+pre.pygments .tok-k { color: #008000; font-weight: bold } /* Keyword */
+pre.pygments .tok-o { color: #666666 } /* Operator */
+pre.pygments .tok-ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre.pygments .tok-cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre.pygments .tok-cp { color: #9C6500 } /* Comment.Preproc */
+pre.pygments .tok-cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre.pygments .tok-c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre.pygments .tok-cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre.pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
+pre.pygments .tok-ge { font-style: italic } /* Generic.Emph */
+pre.pygments .tok-ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre.pygments .tok-gr { color: #E40000 } /* Generic.Error */
+pre.pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre.pygments .tok-gi { color: #008400 } /* Generic.Inserted */
+pre.pygments .tok-go { color: #717171 } /* Generic.Output */
+pre.pygments .tok-gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre.pygments .tok-gs { font-weight: bold } /* Generic.Strong */
+pre.pygments .tok-gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre.pygments .tok-gt { color: #0044DD } /* Generic.Traceback */
+pre.pygments .tok-kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre.pygments .tok-kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre.pygments .tok-kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre.pygments .tok-kp { color: #008000 } /* Keyword.Pseudo */
+pre.pygments .tok-kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre.pygments .tok-kt { color: #B00040 } /* Keyword.Type */
+pre.pygments .tok-m { color: #666666 } /* Literal.Number */
+pre.pygments .tok-s { color: #BA2121 } /* Literal.String */
+pre.pygments .tok-na { color: #687822 } /* Name.Attribute */
+pre.pygments .tok-nb { color: #008000 } /* Name.Builtin */
+pre.pygments .tok-nc { color: #0000FF; font-weight: bold } /* Name.Class */
+pre.pygments .tok-no { color: #880000 } /* Name.Constant */
+pre.pygments .tok-nd { color: #AA22FF } /* Name.Decorator */
+pre.pygments .tok-ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre.pygments .tok-ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre.pygments .tok-nf { color: #0000FF } /* Name.Function */
+pre.pygments .tok-nl { color: #767600 } /* Name.Label */
+pre.pygments .tok-nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+pre.pygments .tok-nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre.pygments .tok-nv { color: #19177C } /* Name.Variable */
+pre.pygments .tok-ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+pre.pygments .tok-w { color: #bbbbbb } /* Text.Whitespace */
+pre.pygments .tok-mb { color: #666666 } /* Literal.Number.Bin */
+pre.pygments .tok-mf { color: #666666 } /* Literal.Number.Float */
+pre.pygments .tok-mh { color: #666666 } /* Literal.Number.Hex */
+pre.pygments .tok-mi { color: #666666 } /* Literal.Number.Integer */
+pre.pygments .tok-mo { color: #666666 } /* Literal.Number.Oct */
+pre.pygments .tok-sa { color: #BA2121 } /* Literal.String.Affix */
+pre.pygments .tok-sb { color: #BA2121 } /* Literal.String.Backtick */
+pre.pygments .tok-sc { color: #BA2121 } /* Literal.String.Char */
+pre.pygments .tok-dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre.pygments .tok-sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre.pygments .tok-s2 { color: #BA2121 } /* Literal.String.Double */
+pre.pygments .tok-se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre.pygments .tok-sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre.pygments .tok-si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre.pygments .tok-sx { color: #008000 } /* Literal.String.Other */
+pre.pygments .tok-sr { color: #A45A77 } /* Literal.String.Regex */
+pre.pygments .tok-s1 { color: #BA2121 } /* Literal.String.Single */
+pre.pygments .tok-ss { color: #19177C } /* Literal.String.Symbol */
+pre.pygments .tok-bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre.pygments .tok-fm { color: #0000FF } /* Name.Function.Magic */
+pre.pygments .tok-vc { color: #19177C } /* Name.Variable.Class */
+pre.pygments .tok-vg { color: #19177C } /* Name.Variable.Global */
+pre.pygments .tok-vi { color: #19177C } /* Name.Variable.Instance */
+pre.pygments .tok-vm { color: #19177C } /* Name.Variable.Magic */
+pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body class="article">
+<div id="header">
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="smlnj-banner">
+  <span class="title"> Standard ML of New Jersey <br/> Release Notes </span>
+  <br/> <br/>
+  <span class="subtitle"> Version 110.99.6.1 <br/> October 25, 2024 </span>
+</div>
+<hr>
+<div class="openblock">
+<div class="content">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">SML/NJ HOME</dt>
+<dd>
+<p><a href="https://www.smlnj.org/index.html"><span class="tt">https://smlnj.org</span></a></p>
+</dd>
+<dt class="hdlist1">FILES</dt>
+<dd>
+<p><a href="https://smlnj.org/dist/working/110.99.6.1/index.html"><span class="tt">https://smlnj.org/dist/working/110.99.6.1/</span></a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_patch_release_110_99_6_1">Patch Release 110.99.6.1</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This patch release fixes a critical bug in 110.99.6.  In addition, there are
+three other minor changes that were planned for 110.99.7.  The changes
+are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Fix for Issue #328 (<code>Real.fromString</code> broken in 110.99.5 and 110.99.6)</p>
+</li>
+<li>
+<p>Added <code>Unsafe.Array.create0</code> for creating zero-length polymorphic arrays.</p>
+</li>
+<li>
+<p>Changed the version banner to match the format used in the development
+repository.  This change means that the release date will be displayed
+instead of the build date.</p>
+</li>
+<li>
+<p>Added <code>rawArray</code> and <code>rawObject</code> decoders to the <code>JSONDecode</code> structure
+in the SML/NJ Library.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The remainder of this document consists of the 110.99.6 release notes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The primary purpose of this release is to enable support for <strong>macOS</strong> 15 (Sequoia),
+but it also contains a number of minor bug fixes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_details">Details</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_compiler">Compiler</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The fusing of conversions between integer and word types has been improved.
+Basically, we have switched from only fusing operations that are adjacent
+in the CPS IR to fusing operations that are logically adjacent (<em>i.e.</em>, there
+is a def-use dependency between them).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_smlnj_library">SML/NJ Library</h3>
+<div class="paragraph">
+<p>There were a number of bug fixes to the Library (see the <strong>Bugs</strong> section below).
+In addition, the following changes were made:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Added the <code>combineWith</code> function to the various implementations of the
+<code>ORD_SET</code> signature.</p>
+</li>
+<li>
+<p>Some minor improvements to hash sets and integer hash tables.</p>
+</li>
+<li>
+<p>Fixed the reporting of field-not-found errors in JSON library (the error
+message was garbled).</p>
+</li>
+<li>
+<p>Fixed some bugs in the new JSON parser.  The first byte of a UTF-8
+sequence was being dropped and comments were only allowed immediately
+in front of values.  There was also a problem with Unicode escape sequences
+in strings that has been fixed.</p>
+</li>
+<li>
+<p>Refactored how error exceptions are used in the <code>JSONDecode</code> and <code>JSONUtil</code>
+modules.  The new design, which follows the Basis Library pattern of
+the <code>IO.Io</code> exception, uses a single <code>JSONError</code> exception for all errors.
+The <code>JSONError</code> exception has two arguments: the first is an exception
+that details the particular kind of error and the second is the JSON value
+that was being processed when the error was detected.
+Note that this change will break code that is explicitly matching on the
+exceptions defined in the <code>JSONDecode</code> and <code>JSONUtil</code> modules.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_installation">Installation</h3>
+<div class="paragraph">
+<p>Installation on <strong>macOS</strong> 15 (Sequoia) is now supported.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bugs">Bugs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is a list of the issues that are fixed (or closed) with this release.
+We include the original bug numbers for bugs that were reported using the
+gforge bug tracker.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch buglist">
+<colgroup>
+<col style="width: 7.6923%;">
+<col style="width: 76.923%;">
+<col style="width: 15.3847%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">Issue</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-center valign-top">Gforge Bug</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">305</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//305"><code>Date.date</code> incorrectly modifies local time with timezone offset</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">n.a.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">310</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//310"><code>HashSetFn.isSubset</code> function accesses out of bound element</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">n.a.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">313</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//313"><code>Random.randRange</code> when low = hi</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">n.a.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">314</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//314">Wrong description of brace syntax in RegExp Library in SML of NJ Library</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">n.a.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">315</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//315">Support macOS 15 Sequoia</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">n.a.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">320</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//320"><code>TimeLimit.timeLimit</code> immediately throws exception on Windows</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">n.a.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">323</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//323">Can&#8217;t build 2024.2 because of problem with ASDL C++ library</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">n.a.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_supported_systems">Supported systems</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We believe that SML/NJ will build and run on the following systems, but have only
+tested some of them:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch support-table">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 44.4444%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">Architecture</th>
+<th class="tableblock halign-center valign-top">Operating System</th>
+<th class="tableblock halign-center valign-top">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>AMD64</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FreeBSD 12.0</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.14 (Mojave)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.15 (Catalina)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 11 (Big Sur)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 12 (Monterey)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 13 (Ventura)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 14 (Sonoma)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 15 (Sequoia)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Ubuntu 20.04.6 LTS</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Ubuntu 22.04.4 LTS</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>Power PC</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.5 (Leopard)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">AIX</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>Sparc</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Solaris</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Linux</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>x86 (32-bit)</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.6 (Snow Leopard)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.7 (Lion)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.8 (Mountain Lion)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.9 (Mavericks)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.10 (Yosemite)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.11 (El Capitan)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.12 (Sierra)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.13 (High Sierra)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.14 (Mojave)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.15 (Catalina)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Ubuntu 16.04.3 LTS</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Other Linux variants</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FreeBSD 12.0</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Other BSD variants</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Windows 7</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Windows 10</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Cygwin (32-bit)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The system also works on Apple Silicon using Rosetta2.</p>
+</div>
+<div class="sect2">
+<h3 id="_32_bit_macos_issues">32-bit macOS issues</h3>
+<div class="paragraph">
+<p>While the <a href="https://smlnj.org/dist/working/110.99.6.1/smlnj-x86-110.99.6.1.pkg">x86 installer</a>
+for 110.99.6.1 works on <strong>macOs</strong> 10.14 Mojave, building from source
+requires some extra steps because the version of <strong>Xcode</strong>
+distributed for Mojave does not include a 32-bit SDK.</p>
+</div>
+<div class="paragraph">
+<p>Another issue that you may encounter
+when building on <strong>macOs</strong> 10.14 Mojave is an error message for a shell
+script of the form</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>  /bin/sh: bad interpreter: Operation not permitted</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This error arises because the <code>com.apple.quarantine</code> attribute is set on the
+shell script.  To fix the problem, remove the attribute using the command</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="shell"><span></span><span class="tok-w">  </span>xattr<span class="tok-w"> </span>-d<span class="tok-w"> </span>com.apple.quarantine<span class="tok-w"> </span>shell-script</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and resume the build.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2025-11-04 09:48:25 -0600
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>

@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.23">
+<title>Standard ML of New Jersey Release Notes</title>
+<style>
+body {
+  font-size: 14pt;
+}
+div.smlnj-banner {
+  font-weight: bold;
+  text-align: center;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.smlnj-banner span.title {
+  font-size: 200%;
+}
+div.smlnj-banner span.subtitle {
+  font-size: 150%;
+}
+h2 {
+  font-size: 140%;
+}
+h3 {
+  font-size: 120%;
+}
+dd {
+  margin-left: 2em;
+  margin-bottom: 0.5em;
+}
+li {
+  margin-bottom: 0.5em;
+}
+span.important {
+  color: red;
+  text-weight: bold;
+}
+span.tt {
+  font-family: "Courier", monospace;
+}
+code {
+  font-family: "Courier", monospace;
+  white-space: pre;
+  color: darkblue;
+}
+.code {
+  font-family: "Courier", monospace;
+  white-space: pre;
+  color: darkblue;
+}
+span.kw {
+  font-family: "Courier", monospace;
+  font-weight: bold;
+  color: darkgreen;
+}
+span.com {
+  font-style: italic;
+  color: indianred;
+}
+span.exe {
+  font-weight: bold;
+}
+table.buglist {
+  margin-left: 2em;
+  font-size: 100%;
+}
+.buglist th {
+  border-bottom: 2px solid black;
+}
+span.bugid {
+  font-weight: bold;
+}
+p.compact {
+  margin-top: 0pt;
+  margin-bottom: 0pt;
+}
+.support-table {
+  margin-left: 2em;
+  font-size: 100%;
+}
+.support-table th {
+  text-align: left;
+  padding-right: 1em;
+  border-bottom: 2px solid black;
+}
+.support-table td {
+  padding-right: 1em;
+}
+p.tableblock {
+  padding-right: 1em;
+  margin-top: 0pt;
+  margin-bottom: 0pt;
+}
+th.halign-left,
+td.halign-left {
+  text-align: left;
+}
+th.halign-right,
+td.halign-right {
+  text-align: right;
+}
+th.halign-center,
+td.halign-center {
+  text-align: center;
+}
+
+
+</style>
+<style>
+pre.pygments .hll { background-color: #ffffcc }
+pre.pygments { background: #f8f8f8; }
+pre.pygments .tok-c { color: #3D7B7B; font-style: italic } /* Comment */
+pre.pygments .tok-err { border: 1px solid #FF0000 } /* Error */
+pre.pygments .tok-k { color: #008000; font-weight: bold } /* Keyword */
+pre.pygments .tok-o { color: #666666 } /* Operator */
+pre.pygments .tok-ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre.pygments .tok-cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre.pygments .tok-cp { color: #9C6500 } /* Comment.Preproc */
+pre.pygments .tok-cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre.pygments .tok-c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre.pygments .tok-cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre.pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
+pre.pygments .tok-ge { font-style: italic } /* Generic.Emph */
+pre.pygments .tok-ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre.pygments .tok-gr { color: #E40000 } /* Generic.Error */
+pre.pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre.pygments .tok-gi { color: #008400 } /* Generic.Inserted */
+pre.pygments .tok-go { color: #717171 } /* Generic.Output */
+pre.pygments .tok-gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre.pygments .tok-gs { font-weight: bold } /* Generic.Strong */
+pre.pygments .tok-gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre.pygments .tok-gt { color: #0044DD } /* Generic.Traceback */
+pre.pygments .tok-kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre.pygments .tok-kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre.pygments .tok-kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre.pygments .tok-kp { color: #008000 } /* Keyword.Pseudo */
+pre.pygments .tok-kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre.pygments .tok-kt { color: #B00040 } /* Keyword.Type */
+pre.pygments .tok-m { color: #666666 } /* Literal.Number */
+pre.pygments .tok-s { color: #BA2121 } /* Literal.String */
+pre.pygments .tok-na { color: #687822 } /* Name.Attribute */
+pre.pygments .tok-nb { color: #008000 } /* Name.Builtin */
+pre.pygments .tok-nc { color: #0000FF; font-weight: bold } /* Name.Class */
+pre.pygments .tok-no { color: #880000 } /* Name.Constant */
+pre.pygments .tok-nd { color: #AA22FF } /* Name.Decorator */
+pre.pygments .tok-ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre.pygments .tok-ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre.pygments .tok-nf { color: #0000FF } /* Name.Function */
+pre.pygments .tok-nl { color: #767600 } /* Name.Label */
+pre.pygments .tok-nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+pre.pygments .tok-nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre.pygments .tok-nv { color: #19177C } /* Name.Variable */
+pre.pygments .tok-ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+pre.pygments .tok-w { color: #bbbbbb } /* Text.Whitespace */
+pre.pygments .tok-mb { color: #666666 } /* Literal.Number.Bin */
+pre.pygments .tok-mf { color: #666666 } /* Literal.Number.Float */
+pre.pygments .tok-mh { color: #666666 } /* Literal.Number.Hex */
+pre.pygments .tok-mi { color: #666666 } /* Literal.Number.Integer */
+pre.pygments .tok-mo { color: #666666 } /* Literal.Number.Oct */
+pre.pygments .tok-sa { color: #BA2121 } /* Literal.String.Affix */
+pre.pygments .tok-sb { color: #BA2121 } /* Literal.String.Backtick */
+pre.pygments .tok-sc { color: #BA2121 } /* Literal.String.Char */
+pre.pygments .tok-dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre.pygments .tok-sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre.pygments .tok-s2 { color: #BA2121 } /* Literal.String.Double */
+pre.pygments .tok-se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre.pygments .tok-sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre.pygments .tok-si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre.pygments .tok-sx { color: #008000 } /* Literal.String.Other */
+pre.pygments .tok-sr { color: #A45A77 } /* Literal.String.Regex */
+pre.pygments .tok-s1 { color: #BA2121 } /* Literal.String.Single */
+pre.pygments .tok-ss { color: #19177C } /* Literal.String.Symbol */
+pre.pygments .tok-bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre.pygments .tok-fm { color: #0000FF } /* Name.Function.Magic */
+pre.pygments .tok-vc { color: #19177C } /* Name.Variable.Class */
+pre.pygments .tok-vg { color: #19177C } /* Name.Variable.Global */
+pre.pygments .tok-vi { color: #19177C } /* Name.Variable.Instance */
+pre.pygments .tok-vm { color: #19177C } /* Name.Variable.Magic */
+pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body class="article">
+<div id="header">
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="smlnj-banner">
+  <span class="title"> Standard ML of New Jersey <br/> Release Notes </span>
+  <br/> <br/>
+  <span class="subtitle"> Version 110.99.5 <br/> March 14, 2024 </span>
+</div>
+<hr>
+<div class="openblock">
+<div class="content">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">SML/NJ HOME</dt>
+<dd>
+<p><a href="https://www.smlnj.org/index.html"><span class="tt">https://smlnj.org</span></a></p>
+</dd>
+<dt class="hdlist1">FILES</dt>
+<dd>
+<p><a href="https://smlnj.org/dist/working/110.99.5/index.html"><span class="tt">https://smlnj.org/dist/working/110.99.5/</span></a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This patch release fixes a large number of bugs in the "legacy" version
+of <strong>SML/NJ</strong>; implements some missing features from the
+<a href="https://smlfamily.github.io/Basis/"><strong>Standard ML Basis Library</strong></a>, and
+includes some improvements to the <strong>SML/NJ Library</strong>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_details">Details</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_compiler">Compiler</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Some minor improvements in the REPL&#8217;s pretty printing.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cm">CM</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The <strong>system/cmb-make</strong> script now runs with the <code>CM_VERBOSE</code> environment variable
+set to <code>false</code> by default (use the <code>-verbose</code> option for the old behavior).  It
+also now sets the <code>PATH</code> environment variable to include the directory where the
+<strong>sml</strong> command lives when it is given as an argument to <strong>cmb-make</strong>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_basis_library">Basis Library</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Complete rewrite of the mechanisms used to implement conversions
+between strings and reals.  As part of this rewrite, we implemented the
+support for the <code>StringCvt.EXACT</code> formatting mode and implemented the
+missing <code>Real.toDecimal</code>/<code>fromDecimal</code> functions.  The real-string
+conversions is based on the <a href="https://github.com/ulfjack/ryu">Ryu library</a>
+and associated <a href="https://doi.org/10.1145/3296979.3192369">PLDI paper</a>
+by Ulf Adams.</p>
+</li>
+<li>
+<p>Added missing implementation of <code>Real64.nextAfter</code> function.</p>
+</li>
+<li>
+<p>Added <code>Unsafe.Real64</code> structure that implements bit casts between
+double-precision reals and 64-bit words.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_smlnj_library">SML/NJ Library</h3>
+<div class="paragraph">
+<p>In addition to the bug fixes noted below, the following improvements
+made to the <strong>SML/NJ Library</strong>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Rewrote the <strong>JSON</strong> parsers to work directly on the input source (instead of
+using a ML-ulex lexer.  This change fixes <a href="https://github.com/smlnj/legacy/issues/284" class="bare">https://github.com/smlnj/legacy/issues/284</a>[Issue #284 (ML-ULex&#8217;s
+memoization causes massive performance penalties for <strong>JSON</strong> parsing).  For
+the <code>data.json</code> file mentioned in the issue, parsing is about eight times
+faster, while the speedup is even greater for the <code>huge.json</code> file.</p>
+</li>
+<li>
+<p>Added the <code>JSONDecode</code> structure to the <strong>JSON</strong> library.  This module implements
+a set of combinators (inspired by the <strong>Elm</strong> <code>JSON.Decode</code> module)
+for decoding <strong>JSON</strong> values.</p>
+</li>
+<li>
+<p>Added <code>insertWith</code>, <code>insertWithi</code>, and <code>findAndRemove</code> operations to the
+<code>HASH_TABLE</code> and <code>MONO_HASH_TABLE</code> interfaces (and corresponding
+implementations).</p>
+</li>
+<li>
+<p>Fixed a bug in <code>Random.randReal</code> on 32-bit systems.</p>
+</li>
+<li>
+<p>Fixed the error checking and documentation for the <code>subArray</code> function
+in the <code>DynamicArray</code> structure and <code>DynamicArrayFn</code> functor.</p>
+</li>
+<li>
+<p>Fixes to the <code>subArray</code> and <code>truncate</code> functions in the dynamic array
+implementation (both structure <code>DynamicArray</code> and functor <code>DynamicArrayFn</code>).</p>
+</li>
+<li>
+<p>Add <code>EditDistance</code> module to utility library.</p>
+</li>
+<li>
+<p>Reworked the <code>UTF8</code> structure to impose stricter validation of the
+encodings.  Added the <code>Invalid</code> exception for when an invalid encoding
+is encountered and replaced uses of the <code>Domain</code> exception with <code>Invalid</code>.
+Also added the <code>size'</code> function for getting the number of UTF-8
+characters in a substring.</p>
+</li>
+<li>
+<p>Added modules for the representation of booleans, integers, and words
+as hash-consed values to the <strong>HashCons</strong> library.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bugs">Bugs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is a list of the issues that are fixed (or closed) with this release.
+We include the original bug numbers for bugs that were reported using the
+gforge bug tracker.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch buglist">
+<colgroup>
+<col style="width: 7.6923%;">
+<col style="width: 76.923%;">
+<col style="width: 15.3847%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">Issue</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-center valign-top">Gforge Bug</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">194</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/194">Incorrect formatting of real number</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">221</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">269</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/269"><code>Real.realMod</code> and <code>Real.split</code> produce incorrect result for values close to zero</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">280</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/280">Support forward-slash ("/") as a separator in the Windows implementation of <code>OS.Path</code></a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">283</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/283"><code>TextIO.inputAll</code> segfaults when reading 980M file</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">284</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/284">ML-ULex&#8217;s memozation causes massive performance penalties for JSON parsing</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">285</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/285">Unmatched specification in opaque signature ascription causes uncaught exception</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">286</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/286">Get "fgrep is obsolescent" when run <strong>sml</strong> on Fedora</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">287</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/287">The word literal <code>0wx80000000</code> is incorrectly converted to <code>0wx7FFFFFFF80000000</code></a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">288</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/288"><code>DynamicArray.subArray</code> creates array with length bound+1</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">289</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/289">Uncaught <code>Bind</code> exception in compiler with opaque signature matching</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">290</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/290"><code>Random.realRand</code> returns far smaller value than unity</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">292</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/292"><code>Word8.toLargeInt</code> is broken in 32-bit version</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">294</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/294">Starting SML/NJ on Windows produces unsightly REM lines</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">295</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/295">CM cannot find tools when using cmb-make to compile the compiler</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">296</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/296">The <code>fromDecimal</code> and <code>toDecimal</code> functions in the <code>Real</code> structure are not implemented</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">297</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/297">Additional operations for the <code>MONO_HASH_TABLE</code> interface</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">298</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/298">Incorrect printing of source code in error message</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">300</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/300"><code>PackReal64</code>{<code>Big</code>,<code>Little</code>}<code>.update</code> is not implemented</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">302</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues/302">SML/NJ implementation of <code>Date.fromTimeLocal</code> differs from SML Basis Library Documentation</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>We also fixed the following bugs that did not have issues
+associated with them (or were bug fixes back-ported from the
+development repository):</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/smlnj/smlnj/issues/276"><code>UTF8.getu</code> should validate that it&#8217;s input is UTF-8</a></p>
+</li>
+<li>
+<p><a href="https://github.com/smlnj/smlnj/pull/280"><code>DynamicArray.subArray</code> creates array with length bound+1</a></p>
+</li>
+<li>
+<p>The implementations of <code>PackWord64Little.update</code> and <code>PackWord64Big.update</code>
+were swapped on 64-bit platforms.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_supported_systems">Supported systems</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We believe that SML/NJ will build and run on the following systems, but have only
+tested some of them:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch support-table">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 44.4444%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">Architecture</th>
+<th class="tableblock halign-center valign-top">Operating System</th>
+<th class="tableblock halign-center valign-top">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>AMD64</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FreeBSD 12.0</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.14 (Mojave)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.15 (Catalina)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 11 (Big Sur)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 12 (Monterey)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Ubuntu 16.04.3 LTS</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Ubuntu 18.04.3 LTS</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>Power PC</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.5 (Leopard)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">AIX</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>Sparc</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Solaris</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Linux</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>x86 (32-bit)</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.6 (Snow Leopard)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.7 (Lion)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.8 (Mountain Lion)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.9 (Mavericks)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.10 (Yosemite)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.11 (El Capitan)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.12 (Sierra)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.13 (High Sierra)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.14 (Mojave)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Ubuntu 16.04.3 LTS</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Other Linux variants</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FreeBSD 12.0</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Other BSD variants</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Windows 7</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Windows 10</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Cygwin (32-bit)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_32_bit_macos_issues">32-bit macOS issues</h3>
+<div class="paragraph">
+<p>While the <a href="https://smlnj.org/dist/working/110.99.5/smlnj-x86-110.99.5.pkg">x86 installer</a>
+for 110.99.5 works on <strong>macOs</strong> 10.14 Mojave, building from source
+requires some extra steps because the version of <strong>Xcode</strong>
+distributed for Mojave does not include a 32-bit SDK.</p>
+</div>
+<div class="paragraph">
+<p>Another issue that you may encounter
+when building on <strong>macOs</strong> 10.14 Mojave is an error message for a shell
+script of the form</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>  /bin/sh: bad interpreter: Operation not permitted</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This error arises because the <code>com.apple.quarantine</code> attribute is set on the
+shell script.  To fix the problem, remove the attribute using the command</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="shell"><span></span><span class="tok-w">  </span>xattr<span class="tok-w"> </span>-d<span class="tok-w"> </span>com.apple.quarantine<span class="tok-w"> </span>shell-script</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and resume the build.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2025-11-04 09:48:25 -0600
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>

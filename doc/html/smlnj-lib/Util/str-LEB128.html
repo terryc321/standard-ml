@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Asciidoctor 2.0.10">
+  <meta name="author" content="John Reppy">
+  <meta name="keywords" content="Standard ML, SML, SML/NJ Library">
+  <title>The LEB128 structure</title>
+  <link rel="stylesheet" href="../styles/smlnj-lib-base.css" type="text/css" />
+  <link rel="stylesheet" href="../styles/smlnj-lib.css" type="text/css" />
+  <link rel="stylesheet" href="../styles/smlnj-lib-pygments.css">
+  <!-- support for latexmath -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      messageStyle: "none",
+      tex2jax: {
+	inlineMath: [["\\(", "\\)"]],
+	displayMath: [["\\[", "\\]"]],
+	ignoreClass: "nostem|nolatexmath"
+      },
+      asciimath2jax: {
+	delimiters: [["\\$", "\\$"]],
+	ignoreClass: "nostem|noasciimath"
+      },
+      TeX: { equationNumbers: { autoNumber: "none" } }
+    })
+    MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+      MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+	if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains('stemblock')) {
+	  data.math.root.display = "block"
+	}
+	return data
+      })
+    })
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</head>
+<body class="article">
+  <div id="layout-top-mask"></div> <!-- to mask scrolled content from below -->
+  <div id="layout-main">
+    <div id="layout-banner-spacer"></div>
+    <div id="layout-banner">
+      <div id="layout-logo">
+        <a href="https://smlnj.org">
+          <img src="../images/smlnj-logo.png" height="120" alt="SML/NJ logo" />
+        </a>
+      </div> <!-- layout-logo -->
+      <div id="layout-title">
+	<div id="layout-title-main"><a href="../index.html">The SML of NJ Library</a></div>
+	<div id="layout-title-description">The <code>LEB128</code> structure</div>
+      </div> <!-- layout-title -->
+    </div> <!-- layout-banner -->
+    <div class="clearer"></div>
+<div id="layout-toc">
+<div id="toc">
+<ul class="toc-lib-list">
+  <li class="toc-lib"><a href="../Controls/controls-lib.html"><span class="toc-lib-title">The Controls Library</span></a></li>
+  <li class="toc-lib"><a href="../HashCons/hash-cons-lib.html"><span class="toc-lib-title">The HashCons Library</span></a></li>
+  <li class="toc-lib"><a href="../INet/inet-lib.html"><span class="toc-lib-title">The INet Library</span></a></li>
+  <li class="toc-lib"><a href="../JSON/json-lib.html"><span class="toc-lib-title">The JSON Library</span></a></li>
+  <li class="toc-lib"><a href="../Reactive/reactive-lib.html"><span class="toc-lib-title">The Reactive Library</span></a></li>
+  <li class="toc-lib"><a href="../RegExp/regexp-lib.html"><span class="toc-lib-title">The RegExp Library</span></a></li>
+  <li class="toc-lib"><a href="../SExp/sexp-lib.html"><span class="toc-lib-title">The SExp Library</span></a></li>
+  <li class="toc-lib"><a href="../Unix/unix-lib.html"><span class="toc-lib-title">The Unix Library</span></a></li>
+  <li class="toc-lib"><a href="../Util/smlnj-lib.html"><span class="toc-lib-title">The Util Library</span></a>
+    <ul class="toc-page-list">
+      <li class="toc-page"><a href="str-ANSITerm.html"><span class="toc-lib-page">The <code>ANSITerm</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-ArrayQSort.html"><span class="toc-lib-page">The <code>ArrayQSort</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-ArrayQSortFn.html"><span class="toc-lib-page">The <code>ArrayQSortFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="str-Atom.html"><span class="toc-lib-page">The <code>Atom</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-Base64.html"><span class="toc-lib-page">The <code>Base64</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-BinaryMapFn.html"><span class="toc-lib-page">The <code>BinaryMapFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="fun-BinarySetFn.html"><span class="toc-lib-page">The <code>BinarySetFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="str-BitArray.html"><span class="toc-lib-page">The <code>BitArray</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-BSearchFn.html"><span class="toc-lib-page">The <code>BSearchFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="str-CharMap.html"><span class="toc-lib-page">The <code>CharMap</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-DynamicArray.html"><span class="toc-lib-page">The <code>DynamicArray</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-DynamicArrayFn.html"><span class="toc-lib-page">The <code>DynamicArrayFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="str-EditDistance.html"><span class="toc-lib-page">The <code>EditDistance</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-Fifo.html"><span class="toc-lib-page">The <code>Fifo</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-FNVHash.html"><span class="toc-lib-page">The <code>FNVHash</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-Format.html"><span class="toc-lib-page">The <code>Format</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-FormatComb.html"><span class="toc-lib-page">The <code>FormatComb</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-GetOpt.html"><span class="toc-lib-page">The <code>GetOpt</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-GraphSCCFn.html"><span class="toc-lib-page">The <code>GraphSCCFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="fun-Hash2TableFn.html"><span class="toc-lib-page">The <code>Hash2TableFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="sig-HASH_KEY.html"><span class="toc-lib-page">The <code>HASH_KEY</code> signature</span></a></li>
+      <li class="toc-page"><a href="fun-HashSetFn.html"><span class="toc-lib-page">The <code>HashSetFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="str-HashString.html"><span class="toc-lib-page">The <code>HashString</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-HashTable.html"><span class="toc-lib-page">The <code>HashTable</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-HashTableFn.html"><span class="toc-lib-page">The <code>HashTableFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="sig-INTERVAL_DOMAIN.html"><span class="toc-lib-page">The <code>INTERVAL_DOMAIN</code> signature</span></a></li>
+      <li class="toc-page"><a href="fun-IntervalSetFn.html"><span class="toc-lib-page">The <code>IntervalSetFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="str-IOUtil.html"><span class="toc-lib-page">The <code>IOUtil</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-JSON.html"><span class="toc-lib-page">The <code>JSON</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-KeywordFn.html"><span class="toc-lib-page">The <code>KeywordFn</code> functor</span></a></li>
+      <li class="toc-page"><span class="toc-lib-page" id="toc-current">The <code>LEB128</code> structure</span></li>
+      <li class="toc-page"><a href="fun-LeftPriorityQFn.html"><span class="toc-lib-page">The <code>MONO_PRIORITYQ</code> signature</span></a></li>
+      <li class="toc-page"><a href="str-LibBase.html"><span class="toc-lib-page">The <code>LibBase</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-ListFormat.html"><span class="toc-lib-page">The <code>ListFormat</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-ListMapFn.html"><span class="toc-lib-page">The <code>ListMapFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="str-ListMergeSort.html"><span class="toc-lib-page">The <code>ListMergeSort</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-ListSetFn.html"><span class="toc-lib-page">The <code>ListSetFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="str-ListXProd.html"><span class="toc-lib-page">The <code>ListXProd</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-MonoArrayFn.html"><span class="toc-lib-page">The <code>MonoArrayFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="sig-MONO_HASH_TABLE.html"><span class="toc-lib-page">The <code>MONO_HASH_TABLE</code> signature</span></a></li>
+      <li class="toc-page"><a href="str-Native.html"><span class="toc-lib-page">Native structure aliases</span></a></li>
+      <li class="toc-page"><a href="str-Native.html"><span class="toc-lib-page">Native structure aliases</span></a></li>
+      <li class="toc-page"><a href="sig-ORD_KEY.html"><span class="toc-lib-page">The <code>ORD_KEY</code> signature</span></a></li>
+      <li class="toc-page"><a href="sig-ORD_MAP.html"><span class="toc-lib-page">The <code>ORD_MAP</code> signature</span></a></li>
+      <li class="toc-page"><a href="sig-ORD_SET.html"><span class="toc-lib-page">The <code>ORD_SET</code> signature</span></a></li>
+      <li class="toc-page"><a href="str-ParserComb.html"><span class="toc-lib-page">The <code>ParserComb</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-PathUtil.html"><span class="toc-lib-page">The <code>PathUtil</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-PropList.html"><span class="toc-lib-page">The <code>PropList</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-Queue.html"><span class="toc-lib-page">The <code>Queue</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-Rand.html"><span class="toc-lib-page">The <code>Rand</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-Random.html"><span class="toc-lib-page">The <code>Random</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-RealOrderStats.html"><span class="toc-lib-page">The <code>RealOrderStats</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-RedBlackMapFn.html"><span class="toc-lib-page">The <code>RedBlackMapFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="fun-RedBlackSetFn.html"><span class="toc-lib-page">The <code>RedBlackSetFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="str-Scan.html"><span class="toc-lib-page">The <code>Scan</code> structure</span></a></li>
+      <li class="toc-page"><a href="fun-SplayMapFn.html"><span class="toc-lib-page">The <code>SplayMapFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="fun-SplaySetFn.html"><span class="toc-lib-page">The <code>SplaySetFn</code> functor</span></a></li>
+      <li class="toc-page"><a href="str-TimeLimit.html"><span class="toc-lib-page">The <code>TimeLimit</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-UnivariateStats.html"><span class="toc-lib-page">The <code>UnivariateStats</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-URef.html"><span class="toc-lib-page">The <code>URef</code> structure</span></a></li>
+      <li class="toc-page"><a href="str-UTF8.html"><span class="toc-lib-page">The <code>UTF8</code> structure</span></a></li>
+    </ul>
+  </li>
+  <li class="toc-lib"><a href="../UUID/uuid-lib.html"><span class="toc-lib-title">The UUID Library</span></a></li>
+  <li class="toc-lib"><a href="../XML/xml-lib.html"><span class="toc-lib-title">The XML Library</span></a></li>
+</ul>
+</div> <!-- toc -->
+</div> <!-- layout-toc -->
+    <div id="layout-content-box">
+      <div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>LEB128</code> structure provides binary encoding/decoding of integer and word types
+using the <a href="https://en.wikipedia.org/wiki/LEB128">Little-Endian-Base-128 (LEB128)</a>
+format.  It supports signed and unsigned encodings, decodings, and functions to
+precompute encoding sizes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_synopsis">Synopsis</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sml"><span></span><span class="tok-kr">signature</span> <span class="tok-nn">LEB128</span>
+<span class="tok-kr">structure</span> <span class="tok-nn">LEB128</span> <span class="tok-p">:</span> <span class="tok-n">LEB128</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_interface">Interface</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sml"><span></span><span class="tok-kr">type</span> <span class="tok-p">(</span><span class="tok-nd">&#39;ty</span><span class="tok-p">,</span> <span class="tok-nd">&#39;src</span><span class="tok-p">)</span> <span class="tok-kt">decoder</span> <span class="tok-p">=</span>
+      <span class="tok-p">(</span><span class="tok-nn">Word8</span><span class="tok-p">.</span><span class="tok-n">word</span><span class="tok-p">,</span> <span class="tok-nd">&#39;src</span><span class="tok-p">)</span> <span class="tok-nn">StringCvt</span><span class="tok-p">.</span><span class="tok-n">reader</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;src</span> <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;ty</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;src</span><span class="tok-p">)</span> <span class="tok-n">option</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">decodeInt</span>       <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">Int</span><span class="tok-p">.</span><span class="tok-n">int</span><span class="tok-p">,</span> <span class="tok-nd">&#39;a</span><span class="tok-p">)</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">decodeNativeInt</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">NativeInt</span><span class="tok-p">.</span><span class="tok-n">int</span><span class="tok-p">,</span> <span class="tok-nd">&#39;a</span><span class="tok-p">)</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">decodeInt64</span>     <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">Int64</span><span class="tok-p">.</span><span class="tok-n">int</span><span class="tok-p">,</span> <span class="tok-nd">&#39;a</span><span class="tok-p">)</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">decodeIntInf</span>    <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">IntInf</span><span class="tok-p">.</span><span class="tok-n">int</span><span class="tok-p">,</span> <span class="tok-nd">&#39;a</span><span class="tok-p">)</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">decodeWord</span>       <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">Word</span><span class="tok-p">.</span><span class="tok-n">word</span><span class="tok-p">,</span> <span class="tok-nd">&#39;src</span><span class="tok-p">)</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">decodeNativeWord</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">NativeWord</span><span class="tok-p">.</span><span class="tok-n">word</span><span class="tok-p">,</span> <span class="tok-nd">&#39;src</span><span class="tok-p">)</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">decodeWord64</span>     <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">Word64</span><span class="tok-p">.</span><span class="tok-n">word</span><span class="tok-p">,</span> <span class="tok-nd">&#39;src</span><span class="tok-p">)</span> <span class="tok-n">decoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">decodeUIntInf</span>    <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">IntInf</span><span class="tok-p">.</span><span class="tok-n">int</span><span class="tok-p">,</span> <span class="tok-nd">&#39;src</span><span class="tok-p">)</span> <span class="tok-n">decoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">sizeOfInt</span>       <span class="tok-p">:</span> <span class="tok-nn">Int</span><span class="tok-p">.</span><span class="tok-n">int</span> <span class="tok-p">-&gt;</span> <span class="tok-n">int</span>
+<span class="tok-kr">val</span> <span class="tok-nv">sizeOfNativeInt</span> <span class="tok-p">:</span> <span class="tok-nn">NativeInt</span><span class="tok-p">.</span><span class="tok-n">int</span> <span class="tok-p">-&gt;</span> <span class="tok-n">int</span>
+<span class="tok-kr">val</span> <span class="tok-nv">sizeOfInt64</span>     <span class="tok-p">:</span> <span class="tok-nn">Int64</span><span class="tok-p">.</span><span class="tok-n">int</span> <span class="tok-p">-&gt;</span> <span class="tok-n">int</span>
+<span class="tok-kr">val</span> <span class="tok-nv">sizeOfIntInf</span>    <span class="tok-p">:</span> <span class="tok-nn">IntInf</span><span class="tok-p">.</span><span class="tok-n">int</span> <span class="tok-p">-&gt;</span> <span class="tok-n">int</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">sizeOfWord</span>       <span class="tok-p">:</span> <span class="tok-nn">Word</span><span class="tok-p">.</span><span class="tok-n">word</span> <span class="tok-p">-&gt;</span> <span class="tok-n">int</span>
+<span class="tok-kr">val</span> <span class="tok-nv">sizeOfNativeWord</span> <span class="tok-p">:</span> <span class="tok-nn">NativeWord</span><span class="tok-p">.</span><span class="tok-n">word</span> <span class="tok-p">-&gt;</span> <span class="tok-n">int</span>
+<span class="tok-kr">val</span> <span class="tok-nv">sizeOfWord64</span>     <span class="tok-p">:</span> <span class="tok-nn">Word64</span><span class="tok-p">.</span><span class="tok-n">word</span> <span class="tok-p">-&gt;</span> <span class="tok-n">int</span>
+<span class="tok-kr">val</span> <span class="tok-nv">sizeOfUIntInf</span>    <span class="tok-p">:</span> <span class="tok-nn">IntInf</span><span class="tok-p">.</span><span class="tok-n">int</span> <span class="tok-p">-&gt;</span> <span class="tok-n">int</span>
+
+<span class="tok-kr">type</span> <span class="tok-p">(</span><span class="tok-nd">&#39;ty</span><span class="tok-p">,</span> <span class="tok-nd">&#39;dst</span><span class="tok-p">)</span> <span class="tok-kt">encoder</span> <span class="tok-p">=</span>
+       <span class="tok-p">(</span><span class="tok-nd">&#39;dst</span> <span class="tok-n">*</span> <span class="tok-nn">Word8</span><span class="tok-p">.</span><span class="tok-n">word</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;dst</span><span class="tok-p">)</span> <span class="tok-p">-&gt;</span> <span class="tok-p">(</span><span class="tok-nd">&#39;dst</span> <span class="tok-n">*</span> <span class="tok-nd">&#39;ty</span><span class="tok-p">)</span> <span class="tok-p">-&gt;</span> <span class="tok-nd">&#39;dst</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">encodeInt</span>       <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">Int</span><span class="tok-p">.</span><span class="tok-n">int</span><span class="tok-p">,</span> <span class="tok-nd">&#39;dst</span><span class="tok-p">)</span> <span class="tok-n">encoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">encodeNativeInt</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">NativeInt</span><span class="tok-p">.</span><span class="tok-n">int</span><span class="tok-p">,</span> <span class="tok-nd">&#39;dst</span><span class="tok-p">)</span> <span class="tok-n">encoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">encodeInt64</span>     <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">Int64</span><span class="tok-p">.</span><span class="tok-n">int</span><span class="tok-p">,</span> <span class="tok-nd">&#39;dst</span><span class="tok-p">)</span> <span class="tok-n">encoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">encodeIntInf</span>    <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">IntInf</span><span class="tok-p">.</span><span class="tok-n">int</span><span class="tok-p">,</span> <span class="tok-nd">&#39;dst</span><span class="tok-p">)</span> <span class="tok-n">encoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">encodeWord</span>       <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">Word</span><span class="tok-p">.</span><span class="tok-n">word</span><span class="tok-p">,</span> <span class="tok-nd">&#39;dst</span><span class="tok-p">)</span> <span class="tok-n">encoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">encodeNativeWord</span> <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">NativeWord</span><span class="tok-p">.</span><span class="tok-n">word</span><span class="tok-p">,</span> <span class="tok-nd">&#39;dst</span><span class="tok-p">)</span> <span class="tok-n">encoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">encodeWord64</span>     <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">Word64</span><span class="tok-p">.</span><span class="tok-n">word</span><span class="tok-p">,</span> <span class="tok-nd">&#39;dst</span><span class="tok-p">)</span> <span class="tok-n">encoder</span>
+<span class="tok-kr">val</span> <span class="tok-nv">encodeUIntInf</span>    <span class="tok-p">:</span> <span class="tok-p">(</span><span class="tok-nn">IntInf</span><span class="tok-p">.</span><span class="tok-n">int</span><span class="tok-p">,</span> <span class="tok-nd">&#39;dst</span><span class="tok-p">)</span> <span class="tok-n">encoder</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">intToBytes</span>       <span class="tok-p">:</span> <span class="tok-nn">Int</span><span class="tok-p">.</span><span class="tok-n">int</span> <span class="tok-p">-&gt;</span> <span class="tok-nn">Word8Vector</span><span class="tok-p">.</span><span class="tok-n">vector</span>
+<span class="tok-kr">val</span> <span class="tok-nv">nativeIntToBytes</span> <span class="tok-p">:</span> <span class="tok-nn">NativeInt</span><span class="tok-p">.</span><span class="tok-n">int</span> <span class="tok-p">-&gt;</span> <span class="tok-nn">Word8Vector</span><span class="tok-p">.</span><span class="tok-n">vector</span>
+<span class="tok-kr">val</span> <span class="tok-nv">int64ToBytes</span>     <span class="tok-p">:</span> <span class="tok-nn">Int64</span><span class="tok-p">.</span><span class="tok-n">int</span> <span class="tok-p">-&gt;</span> <span class="tok-nn">Word8Vector</span><span class="tok-p">.</span><span class="tok-n">vector</span>
+<span class="tok-kr">val</span> <span class="tok-nv">intInfToBytes</span>    <span class="tok-p">:</span> <span class="tok-nn">IntInf</span><span class="tok-p">.</span><span class="tok-n">int</span> <span class="tok-p">-&gt;</span> <span class="tok-nn">Word8Vector</span><span class="tok-p">.</span><span class="tok-n">vector</span>
+
+<span class="tok-kr">val</span> <span class="tok-nv">wordToBytes</span>       <span class="tok-p">:</span> <span class="tok-nn">Word</span><span class="tok-p">.</span><span class="tok-n">word</span> <span class="tok-p">-&gt;</span> <span class="tok-nn">Word8Vector</span><span class="tok-p">.</span><span class="tok-n">vector</span>
+<span class="tok-kr">val</span> <span class="tok-nv">nativeWordToBytes</span> <span class="tok-p">:</span> <span class="tok-nn">NativeWord</span><span class="tok-p">.</span><span class="tok-n">word</span> <span class="tok-p">-&gt;</span> <span class="tok-nn">Word8Vector</span><span class="tok-p">.</span><span class="tok-n">vector</span>
+<span class="tok-kr">val</span> <span class="tok-nv">word64ToBytes</span>     <span class="tok-p">:</span> <span class="tok-nn">Word64</span><span class="tok-p">.</span><span class="tok-n">word</span> <span class="tok-p">-&gt;</span> <span class="tok-nn">Word8Vector</span><span class="tok-p">.</span><span class="tok-n">vector</span>
+<span class="tok-kr">val</span> <span class="tok-nv">uIntInfToBytes</span>    <span class="tok-p">:</span> <span class="tok-nn">IntInf</span><span class="tok-p">.</span><span class="tok-n">int</span> <span class="tok-p">-&gt;</span> <span class="tok-nn">Word8Vector</span><span class="tok-p">.</span><span class="tok-n">vector</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>LEB128</code> structure provides three kinds of operations: decoders, encoders,
+and size functions.</p>
+</div>
+<div class="sect2">
+<h3 id="_decoding">Decoding</h3>
+<div class="paragraph">
+<p>The decoding functions take a reader and input source and return an optional result.
+These functions normally return <code>SOME(value, rest)</code>, where <code>value</code> is the decoded
+number and <code>rest</code> is the residual input source.  There are two possible error
+conditions for decoding.  If the input is incomplete (<em>i.e.</em>, empty or a ends
+with a byte that has the continuation bit set), then <code>NONE</code> is returned.  If the
+decoded value is too large for the type, then the <a href="https://standardml.org/Basis/general.html#SIG:GENERAL.Overflow:EXN:SPEC"><code>Overflow</code></a>
+exception is raised.</p>
+</div>
+<div class="paragraph">
+<p><code><span class="kw">type</span> ('ty, 'src) decoder</code>
+  the type of a decoder that decodes values of type <code>'ty</code> from a byte
+  source of type <code>src</code>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code><span class="kw">val</span> decodeInt : (Int.int, 'a) decoder</code></dt>
+<dd>
+<p><code>decodeInt getb src</code> decodes an LEB128 encoded integer from <code>src</code> using <code>getb</code> to
+read bytes from the <code>src</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> decodeNativeInt : (NativeInt.int, 'a) decoder</code></dt>
+<dd>
+<p><code>decodeNativeInt getb src</code> decodes an LEB128 encoded native-machine integer
+from <code>src</code> using <code>getb</code> to read bytes from the <code>src</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> decodeInt64 : (Int64.int, 'a) decoder</code></dt>
+<dd>
+<p><code>decodeInt64 getb src</code> decodes an LEB128 encoded integer from <code>src</code> using <code>getb</code> to
+read bytes from the <code>src</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> decodeIntInf : (IntInf.int, 'a) decoder</code></dt>
+<dd>
+<p><code>decodeIntInf getb src</code> decodes an LEB128 encoded integer from <code>src</code> using <code>getb</code> to
+read bytes from the <code>src</code>.  Note that this decoder does not raise the
+<a href="https://standardml.org/Basis/general.html#SIG:GENERAL.Overflow:EXN:SPEC"><code>Overflow</code></a> exception.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> decodeWord : (Word.word, 'src) decoder</code></dt>
+<dd>
+<p><code>decodeWord getb src</code> decodes an LEB128 encoded word from <code>src</code> using <code>getb</code> to
+read bytes from the <code>src</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> decodeNativeWord : (NativeWord.word, 'src) decoder</code></dt>
+<dd>
+<p><code>decodeNativeWord getb src</code> decodes an LEB128 encoded word from <code>src</code> using <code>getb</code> to
+read bytes from the <code>src</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> decodeWord64 : (IntInf.int, 'src) decoder</code></dt>
+<dd>
+<p><code>decodeWord64 getb src</code> decodes an LEB128 encoded word from <code>src</code> using <code>getb</code> to
+read bytes from the <code>src</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> decodeUIntInf : (IntInf.int, 'src) decoder</code></dt>
+<dd>
+<p><code>decodeUIntInf getb src</code> decodes an LEB128 encoded unsigned integer from <code>src</code>
+using <code>getb</code> to read bytes from the <code>src</code>.  Note that this decoder does not raise the
+<a href="https://standardml.org/Basis/general.html#SIG:GENERAL.Overflow:EXN:SPEC"><code>Overflow</code></a>
+exception.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_encoding_size">Encoding Size</h3>
+<div class="paragraph">
+<p>The encoding-size functions compute the number of bytes required to encode a
+number.  These functions are provided at the same types as the decoding and
+encoding functions, but note that the encoding size only depends on the value
+being encoded, not on the type of the value.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code><span class="kw">val</span> sizeOfInt : Int.int &#8594; int</code></dt>
+<dd>
+<p><code>sizeOfInt n</code> returns the size in bytes of the LEB128 encoding of the
+signed integer <code>n</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> sizeOfNativeInt : NativeInt.int &#8594; int</code></dt>
+<dd>
+<p><code>sizeOfNativeInt n</code> returns the size in bytes of the LEB128 encoding of the
+signed integer <code>n</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> sizeOfInt64 : Int64.int &#8594; int</code></dt>
+<dd>
+<p><code>sizeOfInt64 n</code> returns the size in bytes of the LEB128 encoding of the
+signed integer <code>n</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> sizeOfIntInf : IntInf.int &#8594; int</code></dt>
+<dd>
+<p><code>sizeOfIntInf n</code> returns the size in bytes of the LEB128 encoding of the
+signed integer <code>n</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> sizeOfWord : Word.word &#8594; int</code></dt>
+<dd>
+<p><code>sizeOfWord w</code> returns the size in bytes of the LEB128 encoding of the word <code>w</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> sizeOfNativeWord : NativeWord.word &#8594; int</code></dt>
+<dd>
+<p><code>sizeOfNativeWord w</code> returns the size in bytes of the LEB128 encoding of the word <code>w</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> sizeOfWord64 : Word64.word &#8594; int</code></dt>
+<dd>
+<p><code>sizeOfWord64 w</code> returns the size in bytes of the LEB128 encoding of the word <code>w</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> sizeOfUIntInf : IntInf.int &#8594; int</code></dt>
+<dd>
+<p><code>sizeOfUIntInf n</code> returns the size in bytes of the LEB128 encoding of the
+unsigned integer <code>n</code>.
+This expression will raise the
+<a href="https://standardml.org/Basis/general.html#SIG:GENERAL.Domain:EXN:SPEC"><code>Domain</code></a>
+exception when <code>n &lt; 0</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_encoding">Encoding</h3>
+<div class="paragraph">
+<p>The encoding functions provide an interface designed to support a variety of
+different output targets.  The first argument is a function for outputting
+bytes to an abstract destination, followed by a pair of the destination and
+number to be encoded.  The final destination is returned as the result.
+See the <a href="#_examples">Examples</a> section below for examples of how to use the general encoding
+functions.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code><span class="kw">type</span> 'ty encoder</code></dt>
+<dd>
+<p>the type of a encoder for values of type <code>'ty</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> encodeInt : Int.int encoder</code></dt>
+<dd>
+<p><code>encodeInt putB (dst, n)</code> outputs the LEB128 encoding of the signed integer <code>n</code>
+to the destination <code>dst</code> using <code>putB</code> to output bytes.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> encodeNativeInt : NativeInt.int encoder</code></dt>
+<dd>
+<p><code>encodeNativeInt putB (dst, n)</code> outputs the LEB128 encoding of the signed integer <code>n</code>
+to the destination <code>dst</code> using <code>putB</code> to output bytes.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> encodeInt64 : Int64.int encoder</code></dt>
+<dd>
+<p><code>encodeInt64 putB (dst, n)</code> outputs the LEB128 encoding of the signed integer <code>n</code>
+to the destination <code>dst</code> using <code>putB</code> to output bytes.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> encodeIntInf : IntInf.int encoder</code></dt>
+<dd>
+<p><code>encodeIntInf putB (dst, n)</code> outputs the LEB128 encoding of the signed integer <code>n</code>
+to the destination <code>dst</code> using <code>putB</code> to output bytes.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> encodeWord : Word.word encoder</code></dt>
+<dd>
+<p><code>encodeWord putB (dst, w)</code> outputs the LEB128 encoding of the unsigned integer <code>w</code>
+to the destination <code>dst</code> using <code>putB</code> to output bytes.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> encodeNativeWord : NativeWord.word encoder</code></dt>
+<dd>
+<p><code>encodeNativeWord putB (dst, w)</code> outputs the LEB128 encoding of the unsigned integer <code>w</code>
+to the destination <code>dst</code> using <code>putB</code> to output bytes.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> encodeWord64 : Word64.word encoder</code></dt>
+<dd>
+<p><code>encodeWord64 putB (dst, w)</code> outputs the LEB128 encoding of the unsigned integer <code>w</code>
+to the destination <code>dst</code> using <code>putB</code> to output bytes.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> encodeUIntInf : IntInf.int encoder</code></dt>
+<dd>
+<p><code>encodeUIntInf putB (dst, n)</code> outputs the LEB128 encoding of the unsigned integer <code>n</code>
+to the destination <code>dst</code> using <code>putB</code> to output bytes.
+This expression will raise the
+<a href="https://standardml.org/Basis/general.html#SIG:GENERAL.Domain:EXN:SPEC"><code>Domain</code></a>
+exception when <code>n &lt; 0</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_encoding_to_byte_vectors">Encoding to Byte Vectors</h3>
+<div class="paragraph">
+<p>In addition to the general encoding functions above, specialized versions
+are provided that convert numbers to their LEB128 byte-vector encoding.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code><span class="kw">val</span> intToBytes : Int.int -&gt; Word8Vector.vector</code></dt>
+<dd>
+<p><code>intToBytes n</code> returns the LEB128 encoding of the signed integer <code>n</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> nativeIntToBytes : NativeInt.int -&gt; Word8Vector.vector</code></dt>
+<dd>
+<p><code>nativeIntToBytes n</code> returns the LEB128 encoding of the signed integer <code>n</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> int64ToBytes : Int64.int -&gt; Word8Vector.vector</code></dt>
+<dd>
+<p><code>int64ToBytes n</code> returns the LEB128 encoding of the signed integer <code>n</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> intInfToBytes : IntInf.int -&gt; Word8Vector.vector</code></dt>
+<dd>
+<p><code>intInfToBytes n</code> returns the LEB128 encoding of the signed integer <code>n</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> wordToBytes : Word.word -&gt; Word8Vector.vector</code></dt>
+<dd>
+<p><code>wordToBytes w</code> returns the LEB128 encoding of the word <code>w</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> nativeWordToBytes : NativeWord.word -&gt; Word8Vector.vector</code></dt>
+<dd>
+<p><code>nativeWordToBytes w</code> returns the LEB128 encoding of the word <code>w</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> word64ToBytes : Word64.word -&gt; Word8Vector.vector</code></dt>
+<dd>
+<p><code>word64ToBytes w</code> returns the LEB128 encoding of the word <code>w</code>.</p>
+</dd>
+<dt class="hdlist1"><code><span class="kw">val</span> uIntInfToBytes : IntInf.int -&gt; Word8Vector.vector</code></dt>
+<dd>
+<p><code>uIntInfToBytes n</code> returns the LEB128 encoding of the unsigned integer <code>n</code>.
+This expression will raise the
+<a href="https://standardml.org/Basis/general.html#SIG:GENERAL.Domain:EXN:SPEC"><code>Domain</code></a>
+exception when <code>n &lt; 0</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples">Examples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As an example of using the decoding functions, the following function
+decodes integers from vector slices:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sml"><span></span><span class="tok-kr">fun</span> <span class="tok-nf">fromSlice</span> <span class="tok-n">slice</span> <span class="tok-p">=</span> <span class="tok-n">decodeInt</span> <span class="tok-nn">Word8VectorSlice</span><span class="tok-p">.</span><span class="tok-n">getItem</span> <span class="tok-n">slice</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As an example of using the encoding functions, the following function
+encodes a word into a byte buffer.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sml"><span></span><span class="tok-kr">fun</span> <span class="tok-nf">toBuffer</span> <span class="tok-p">(</span><span class="tok-n">buf</span><span class="tok-p">,</span> <span class="tok-n">w</span><span class="tok-p">)</span> <span class="tok-p">=</span>
+      <span class="tok-n">encodeWord</span>
+        <span class="tok-p">(</span><span class="tok-kr">fn</span> <span class="tok-p">(</span><span class="tok-n">buf</span><span class="tok-p">,</span> <span class="tok-n">b</span><span class="tok-p">)</span> <span class="tok-p">=&gt;</span> <span class="tok-p">(</span><span class="tok-nn">Word8Buffer</span><span class="tok-p">.</span><span class="tok-n">add1</span><span class="tok-p">(</span><span class="tok-n">buf</span><span class="tok-p">,</span> <span class="tok-n">b</span><span class="tok-p">);</span> <span class="tok-n">buf</span><span class="tok-p">))</span>
+        <span class="tok-p">(</span><span class="tok-n">buf</span><span class="tok-p">,</span> <span class="tok-n">w</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the <code>toBuffer</code> function, the buffer keeps track of where the next byte
+goes, but if we want to write the bytes into an array, we need to keep track
+of the index in the first argument.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sml"><span></span><span class="tok-kr">fun</span> <span class="tok-nf">toArray</span> <span class="tok-p">(</span><span class="tok-n">arr</span><span class="tok-p">,</span> <span class="tok-n">idx</span><span class="tok-p">,</span> <span class="tok-n">w</span><span class="tok-p">)</span> <span class="tok-p">=</span>
+      <span class="tok-n">encodeWord</span>
+        <span class="tok-p">(</span><span class="tok-kr">fn</span> <span class="tok-p">(</span><span class="tok-n">i</span><span class="tok-p">,</span> <span class="tok-n">b</span><span class="tok-p">)</span> <span class="tok-p">=&gt;</span> <span class="tok-p">(</span><span class="tok-nn">Word8Array</span><span class="tok-p">.</span><span class="tok-n">update</span><span class="tok-p">(</span><span class="tok-n">arr</span><span class="tok-p">,</span> <span class="tok-n">i</span><span class="tok-p">,</span> <span class="tok-n">b</span><span class="tok-p">);</span> <span class="tok-n">i+</span><span class="tok-mi">1</span><span class="tok-p">))</span>
+        <span class="tok-p">(</span><span class="tok-n">idx</span><span class="tok-p">,</span> <span class="tok-n">w</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_see_also">See Also</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="smlnj-lib.html"><em>The Util Library</em></a></p>
+</div>
+</div>
+</div>
+      </div> <!-- content -->
+    </div> <!-- layout-content-box -->
+    <div id="layout-footer-box">
+      <div id="layout-footer">
+	<div id="layout-footer-text">
+	  <strong>SML/NJ</strong> Version 110.99.9 (November 4, 2025)<br />
+	  Last updated 2025-11-04 15:48:25 UTC
+	</div> <!-- layout-footer-text -->
+      </div> <!-- layout-footer -->
+    </div> <!-- layout-footer-box -->
+  </div> <!-- layout-main -->
+</body>
+</html>

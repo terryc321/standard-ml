@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.23">
+<title>Standard ML of New Jersey Release Notes</title>
+<style>
+body {
+  font-size: 14pt;
+}
+div.smlnj-banner {
+  font-weight: bold;
+  text-align: center;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.smlnj-banner span.title {
+  font-size: 200%;
+}
+div.smlnj-banner span.subtitle {
+  font-size: 150%;
+}
+h2 {
+  font-size: 140%;
+}
+h3 {
+  font-size: 120%;
+}
+dd {
+  margin-left: 2em;
+  margin-bottom: 0.5em;
+}
+li {
+  margin-bottom: 0.5em;
+}
+span.important {
+  color: red;
+  text-weight: bold;
+}
+span.tt {
+  font-family: "Courier", monospace;
+}
+code {
+  font-family: "Courier", monospace;
+  white-space: pre;
+  color: darkblue;
+}
+.code {
+  font-family: "Courier", monospace;
+  white-space: pre;
+  color: darkblue;
+}
+span.kw {
+  font-family: "Courier", monospace;
+  font-weight: bold;
+  color: darkgreen;
+}
+span.com {
+  font-style: italic;
+  color: indianred;
+}
+span.exe {
+  font-weight: bold;
+}
+table.buglist {
+  margin-left: 2em;
+  font-size: 100%;
+}
+.buglist th {
+  border-bottom: 2px solid black;
+}
+span.bugid {
+  font-weight: bold;
+}
+p.compact {
+  margin-top: 0pt;
+  margin-bottom: 0pt;
+}
+.support-table {
+  margin-left: 2em;
+  font-size: 100%;
+}
+.support-table th {
+  text-align: left;
+  padding-right: 1em;
+  border-bottom: 2px solid black;
+}
+.support-table td {
+  padding-right: 1em;
+}
+p.tableblock {
+  padding-right: 1em;
+  margin-top: 0pt;
+  margin-bottom: 0pt;
+}
+th.halign-left,
+td.halign-left {
+  text-align: left;
+}
+th.halign-right,
+td.halign-right {
+  text-align: right;
+}
+th.halign-center,
+td.halign-center {
+  text-align: center;
+}
+
+
+</style>
+</head>
+<body class="article">
+<div id="header">
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="smlnj-banner">
+  <span class="title"> Standard ML of New Jersey <br/> Release Notes </span>
+  <br/> <br/>
+  <span class="subtitle"> Version 110.99.4 <br/> August 1, 2023 </span>
+</div>
+<hr>
+<div class="openblock">
+<div class="content">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">SML/NJ HOME</dt>
+<dd>
+<p><a href="https://www.smlnj.org/index.html"><span class="tt">https://smlnj.org</span></a></p>
+</dd>
+<dt class="hdlist1">FILES</dt>
+<dd>
+<p><a href="https://smlnj.org/dist/working/110.99.4/index.html"><span class="tt">https://smlnj.org/dist/working/110.99.4/</span></a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This patch release fixes a number of bugs in the "legacy" version
+of <strong>SML/NJ</strong>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_details">Details</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_mlrisc">MLRISC</h3>
+<div class="paragraph">
+<p>Modified the way that zero-extension (<code>ZX</code>) is handled when the source bit width is
+smaller than the target.  Previously, the code assumed that the high bits would be
+zero, but as demonstrated by <a href="https://github.com/smlnj/legacy/issues//272">issue #272</a>, this is not guaranteed,
+so we now mask out the high bits.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_smlnj_library">SML/NJ Library</h3>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Added the <code>NativeInt</code> and <code>NativeWord</code> structure aliases to provide
+a portable way to refer to the native numeric types in signatures.</p>
+</li>
+<li>
+<p>Reimplementation of the <code>Random</code> structure to use the Mersenne Twister
+algorithm.  There are both 32-bit and 64-bit versions of the generator
+(which one is included depends on the target platform).</p>
+</li>
+<li>
+<p>Reworked the code for determining the maximum hash-table size (used
+in the <code>HashSetFn</code> and <code>HashTableRep</code> modules) so that it does not
+depend on <code>Int.int</code> and <code>Word.word</code> being the same size (an issue
+for MLton).  Also split that code out into the internal <code>MaxHashTableSize</code>
+module.</p>
+</li>
+<li>
+<p>Added support for the end-of-line assertion ("$") and full support for
+intervals to the Thompson engine in the RegExp library.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_installation">Installation</h3>
+<div class="paragraph">
+<p>Added <strong>macOS</strong> 14 (Sonoma) as a recognized system.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_32_bit_macos_issues">32-bit macOS issues</h3>
+<div class="paragraph">
+<p>While the <a href="https://smlnj.org/dist/working/110.99.4/smlnj-x86-110.99.4.pkg">x86 installer</a>
+for 110.99.4 works on <strong>macOs</strong> 10.14 Mojave, building from source
+requires some extra steps because the version of <strong>Xcode</strong>
+distributed for Mojave does not include a 32-bit SDK.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bugs">Bugs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is a list of the issues and pull requests that are fixed (or closed) with
+this release.
+We include the original bug numbers for bugs that were reported using the
+<a href="https://smlnj-gforge.cs.uchicago.edu/projects/smlnj-bugs">gforge bug tracker</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch buglist">
+<colgroup>
+<col style="width: 7.6923%;">
+<col style="width: 76.923%;">
+<col style="width: 15.3847%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">Issue</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-center valign-top">Gforge Bug</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">87</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//87"><code>ml-makedepend</code> trashes dependency file on error</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">71</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">256</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//256">Initial numbers generated by <code>Util/random.sml</code> have unexpected regularities</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">258</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//258">Thompson NFA regex engine doesn’t advance stream position when matching</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">260</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//260">64-bit word literals are parsed incorrectly on 32-bit systems</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">264</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/pull//264">Fix <code>VectorSlice.all</code> and <code>ArraySlice.all</code></a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">266</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/pull//266">config: restore PPC for 10.4 and 10.6</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">267</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/pull//267">Update makefile</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">272</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//272">Calling C function via NLFFI binding may give result outside range of its C return type</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">278</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//278"><code>CharBuffer.addSlice</code> does not properly handle starting offsets</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="bugid">279</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/smlnj/legacy/issues//279"><code>HashSetFn&#8217;s calculation of `maxSize</code> can cause <code>Overflow</code> during functor instantiation</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>n.a.</strong></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following unnumbered bugs were also fixed:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>ULexBuffer.getu</code> function did not handle 4-byte UTF-8 sequences in some
+situations.</p>
+</li>
+<li>
+<p>The <code>ULexBuffer.getu</code> function did not reject surrogate halves or too-large
+codepoints.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_supported_systems">Supported systems</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We believe that SML/NJ will build and run on the following systems, but have only
+tested some of them:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch support-table">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 44.4444%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">Architecture</th>
+<th class="tableblock halign-center valign-top">Operating System</th>
+<th class="tableblock halign-center valign-top">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>AMD64</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FreeBSD 12.0</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.14 (Mojave)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.15 (Catalina)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 11 (Big Sur)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 12 (Monterey)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 13 (Ventura)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 14 (Sonoma beta)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Ubuntu 20.04.3 LTS</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Tested</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>Power PC</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.5 (Leopard)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">AIX</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>Sparc</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Solaris</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Linux</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>x86 (32-bit)</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.6 (Snow Leopard)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.7 (Lion)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.8 (Mountain Lion)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.9 (Mavericks)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.10 (Yosemite)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Mac OS X 10.11 (El Capitan)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.12 (Sierra)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.13 (High Sierra)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">macOS 10.14 (Mojave)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Ubuntu 16.04.3 LTS</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Other Linux variants</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FreeBSD 12.0</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Other BSD variants</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Windows 7</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Windows 10</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Cygwin (32-bit)</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>&#160;</strong></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2025-11-04 09:48:25 -0600
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>
