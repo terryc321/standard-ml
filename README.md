@@ -8,7 +8,9 @@ ml-for-the-working-programmer
 
 ![a screenshot](exene/examples/basicwin/screenshots/2025-12-29-082751_1201x824_scrot.png)
 
+# eXene bounce
 
+![a screenshot](exene/examples/bounce/screenshots/2025-12-29-132337_1239x759_scrot.png)
 
 # eXene triangle
 
