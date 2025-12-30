@@ -1,13 +1,13 @@
 
 
 
-(* natstream.sml - natural numbers as a stream  *)
+(* natural numbers as a stream  *)
 
-structure NatStream = struct
+structure Naturals = struct
 
   open CML
 
-  fun makeNatStream () = let
+  fun makeNaturals () = let
       val ch = channel ()
       fun count i = (send (ch, i); count (i+1))
   in
@@ -22,16 +22,21 @@ structure NatStream = struct
        printFirstN (n-1) ch)
 
   fun main () =
-    let val ch = makeNatStream ()
+    let val ch = makeNaturals ()
     in
-      printFirstN 10000000 ch;
+      printFirstN 1000 ch;
       TextIO.print "Done\n"
     end
 
+  (* Run the program
+   * Naturals.run()
+   *)
+  fun run () = RunCML.doit (main, NONE);
+	
 end
 
-(* Run the program *)
-val _ = RunCML.doit (NatStream.main, NONE);
+
+
 
 
 			  
